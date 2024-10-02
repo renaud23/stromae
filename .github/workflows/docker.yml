@@ -1,0 +1,55 @@
+name: StromaeV3 Build Docker
+
+on:
+  push:
+    branches:
+      - 'v3-master'
+    paths-ignore:
+      - 'docs/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: yarn
+      - run: yarn build
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+
+  check_if_version_upgraded:
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      stromae_version: ${{ steps.version.outputs.prop }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get current version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: 'package.json'
+          prop_path: 'version'
+
+  docker:
+    needs: check_if_version_upgraded
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: ${{ secrets.DOCKERHUB_REGISTRY_HOST }}/stromae
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          tags: ${{ needs.check_if_version_upgraded.outputs.stromae_version }}
