@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SurveyUnit } from '../typeLunatic/type-source';
+import { UNINITIALIZE } from '../lib/api/survey';
 
 export interface StromaeState {
 	survey: string;
@@ -7,8 +7,8 @@ export interface StromaeState {
 }
 
 const initialState = {
-	survey: 'undefined',
-	unit: 'undefined',
+	survey: UNINITIALIZE,
+	unit: UNINITIALIZE,
 };
 
 export const stromaeState = createSlice({

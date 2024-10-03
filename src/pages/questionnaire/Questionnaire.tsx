@@ -17,7 +17,11 @@ import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { SurveyUnit } from '../../typeLunatic/type-source';
-import { useGetSurveyQuery, useGetSurveyUnitQuery } from '../../lib/api/survey';
+import {
+	UNINITIALIZE,
+	useGetSurveyQuery,
+	useGetSurveyUnitQuery,
+} from '../../lib/api/survey';
 import { uri404 } from '../../lib/domainUri';
 import { defineSurveyUnit } from '../../redux/appSlice';
 
@@ -32,7 +36,7 @@ const FEATURES = ['VTL', 'MD'];
 const COLLECTED = 'COLLECTED';
 
 export function Questionnaire(props: QuestionnaireProps) {
-	const { survey = '[UNINIT]', unit = '[UNINIT]' } = useParams();
+	const { survey = UNINITIALIZE, unit = UNINITIALIZE } = useParams();
 	useDocumentTitle('Questionnaire');
 
 	const dispatch = useAppDispatch();
@@ -44,7 +48,7 @@ export function Questionnaire(props: QuestionnaireProps) {
 	}, [dispatch, survey, unit]);
 
 	const { data: source } = useGetSurveyQuery(survey, {
-		skip: survey === '[UNINIT]',
+		skip: survey === UNINITIALIZE,
 	});
 
 	const {
@@ -52,7 +56,7 @@ export function Questionnaire(props: QuestionnaireProps) {
 		isLoading,
 		data: surveyUnitData,
 		isError,
-	} = useGetSurveyUnitQuery(unit, { skip: unit === '[UNINIT]' });
+	} = useGetSurveyUnitQuery(unit, { skip: unit === UNINITIALIZE });
 
 	if (source && surveyUnitData) {
 		return (

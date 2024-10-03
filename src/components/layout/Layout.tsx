@@ -4,7 +4,7 @@ import { Header } from '../Header';
 import { HeaderAuth } from '../Header/HeaderAuth';
 import { Footer } from '../footer/Footer';
 import { Main } from './Main';
-import { useGetMetadataSurveyQuery } from '../../lib/api/survey';
+import { UNINITIALIZE, useGetMetadataSurveyQuery } from '../../lib/api/survey';
 import { useAppSelector } from '../../redux/store';
 import { useNavigate } from 'react-router';
 import { uri404 } from '../../lib/domainUri';
@@ -23,7 +23,7 @@ export function Layout({ children, ...rest }: PropsWithChildren<LayoutProps>) {
 	const navigate = useNavigate();
 
 	const { data, isFetching, isLoading, isSuccess, isError } =
-		useGetMetadataSurveyQuery(survey, { skip: survey === 'undefined' });
+		useGetMetadataSurveyQuery(survey, { skip: survey === UNINITIALIZE });
 
 	if (isFetching || isLoading) {
 		<p>Les données de l'application sont en cours de chargement.</p>;

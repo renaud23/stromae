@@ -3,6 +3,8 @@ import { environment } from '../../utils/read-env-vars';
 import { LunaticSource } from '../../typeLunatic/type-source';
 import { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type';
 
+export const UNINITIALIZE = 'RTK_UNITILIATLIZE';
+
 export const surveyAPI = createApi({
 	reducerPath: 'surveyAPI',
 	baseQuery: fetchBaseQuery({ baseUrl: environment.DOMAIN }),
