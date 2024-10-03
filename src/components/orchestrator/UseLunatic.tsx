@@ -20,6 +20,9 @@ import { OrchestratorProps } from './Orchestrator';
 import { useQuestionnaireTitle } from './useQuestionnaireTitle';
 import { useRedirectIfAlreadyValidated } from './useRedirectIfAlreadyValidated';
 import { useSaving } from './useSaving';
+import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../redux/store';
+import { surveyAPI } from '../../lib/api/survey';
 
 export function createPersonalizationMap(
 	personalization: Array<PersonalizationElement>
@@ -34,7 +37,6 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 		source,
 		surveyUnitData,
 		children,
-		getReferentiel,
 		preferences,
 		features,
 		savingType,
@@ -44,8 +46,7 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 		metadata,
 	} = props;
 	const [args, setArgs] = useState<Record<string, unknown>>({});
-	const [waiting, setWaiting] = useState(false);
-	const [failure, setFailure] = useState<SavingFailure>();
+
 	const [currentChange, setCurrentChange] = useState<{ name: string }>();
 	const { data, stateData, personalization = [] } = surveyUnitData ?? {};
 	const personalizationMap = useMemo<
@@ -57,6 +58,7 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 	const initialCollectStatus = state ?? CollectStatusEnum.Init;
 
 	useRedirectIfAlreadyValidated(initialCollectStatus);
+	const dispatch = useAppDispatch();
 
 	const { listen, save } = useSaving();
 
@@ -73,6 +75,16 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 			setRefreshControls(true);
 		},
 		[listen]
+	);
+
+	const getReferentiel = useCallback(
+		async (name: string) => {
+			const { data } = await dispatch(
+				surveyAPI.endpoints.getNomenclature.initiate(name)
+			);
+			return data;
+		},
+		[dispatch]
 	);
 
 	useEffect(() => {
@@ -170,8 +182,6 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 				initialCollectStatus={initialCollectStatus}
 				refreshControls={refreshControls}
 				setRefreshControls={setRefreshControls}
-				waiting={waiting}
-				savingFailure={failure}
 				currentChange={currentChange}
 			>
 				{children}

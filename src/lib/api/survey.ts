@@ -26,6 +26,9 @@ export const surveyAPI = createApi({
 		getMetadataSurvey: builder.query<MetadataSurvey, string>({
 			query: (survey) => `/api/questionnaire/${survey}/metadata`,
 		}),
+		getNomenclature: builder.query<Record<string, unknown>, string>({
+			query: (nomenclature: string) => `/api/nomenclature/${nomenclature}`,
+		}),
 		putSurveyUnitData: builder.mutation({
 			query: ({ unit, ...body }) => ({
 				url: `/api/survey-unit/${unit}/data`,
