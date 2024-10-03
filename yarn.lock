@@ -34,25 +34,25 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@axa-fr/oidc-client-service-worker@7.18.5":
-  version "7.18.5"
-  resolved "https://registry.yarnpkg.com/@axa-fr/oidc-client-service-worker/-/oidc-client-service-worker-7.18.5.tgz#d46e8ecb415d318b2eb50d3a674ae1eed96634c2"
-  integrity sha512-O3FKWRlsmNrmtN9jtRn76eaRmqaPkzE50Crs+NZm/clr07cBGvRTKOyrdVzZQetk/Z6jWJx8TYmM10yiI2cxhA==
+"@axa-fr/oidc-client-service-worker@7.22.31":
+  version "7.22.31"
+  resolved "https://registry.yarnpkg.com/@axa-fr/oidc-client-service-worker/-/oidc-client-service-worker-7.22.31.tgz#a732d1904d4669d094320c72b163a64fc5d2417a"
+  integrity sha512-U4x6vk579biU9omY97ymmV/uwJLYmNrie2t14kOooBoe/zGU+y3EhstpfG2m03t72oDJXsOAacVsH9b1+rjS7g==
 
-"@axa-fr/oidc-client@7.18.5":
-  version "7.18.5"
-  resolved "https://registry.yarnpkg.com/@axa-fr/oidc-client/-/oidc-client-7.18.5.tgz#9943c85bfe68455ebbdb016fd0e3fcf799b2b189"
-  integrity sha512-OagIEe/fHH1l5SGDv7Fx3xyTPAOnqzNfLQW1+Y2S5pfP77oopby+n8Mhc/0eJifrrmVonQ+epb8WxmN73OQL4A==
+"@axa-fr/oidc-client@7.22.31":
+  version "7.22.31"
+  resolved "https://registry.yarnpkg.com/@axa-fr/oidc-client/-/oidc-client-7.22.31.tgz#93400f101cd398420571d6ea7e8156e117f372df"
+  integrity sha512-r4bxP7Ds7rvs+dK/wgn9nnQfDT3KuddOAaM6FrLylSRsipsaTWzY8f9j+HwQhII7VTJun7M1pYra/P+DXZBbtg==
   dependencies:
-    "@axa-fr/oidc-client-service-worker" "7.18.5"
+    "@axa-fr/oidc-client-service-worker" "7.22.31"
 
-"@axa-fr/react-oidc@^7.18.5":
-  version "7.18.5"
-  resolved "https://registry.yarnpkg.com/@axa-fr/react-oidc/-/react-oidc-7.18.5.tgz#97f46991b71275866503c89f81b4898ceeaa1cb4"
-  integrity sha512-+lJfIau1MeFId3tpZOdMHCN/zZY4FL5mAZi6yu96uH7P8quQxW0KMbdig2ScgTbk/VxmuKUR5zrktQipPECPXA==
+"@axa-fr/react-oidc@^7.22.31":
+  version "7.22.31"
+  resolved "https://registry.yarnpkg.com/@axa-fr/react-oidc/-/react-oidc-7.22.31.tgz#9e94494e2b5f53b42b1d42966aef67becd083274"
+  integrity sha512-l+h3bAjMePtbS5cVyMrgNWX3EGfv2K+tZchGdasNVNMZiUJK27+YvzEbAvvoaPPghgyFouYSUZBff1q4grJ/Tg==
   dependencies:
-    "@axa-fr/oidc-client" "7.18.5"
-    "@axa-fr/oidc-client-service-worker" "7.18.5"
+    "@axa-fr/oidc-client" "7.22.31"
+    "@axa-fr/oidc-client-service-worker" "7.22.31"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.0", "@babel/code-frame@^7.22.13", "@babel/code-frame@^7.23.4", "@babel/code-frame@^7.8.3":
   version "7.23.4"

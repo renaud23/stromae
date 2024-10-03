@@ -6,12 +6,14 @@ export interface StromaeState {
 	survey: string;
 	unit: string;
 	collectStatus?: CollectStatusEnum;
+	savingFailure?: boolean;
 }
 
 const initialState = {
 	survey: UNINITIALIZE,
 	unit: UNINITIALIZE,
 	collectStatus: CollectStatusEnum.Init,
+	savingFailure: false,
 };
 
 export const stromaeState = createSlice({
@@ -26,7 +28,10 @@ export const stromaeState = createSlice({
 			state.unit = action.payload.unit;
 		},
 		defineCollectStatus: (state, action) => {
-			state.collectStatus = action.payload.collectStatus;
+			state.collectStatus = action.payload;
+		},
+		defineSavingFailure: (state, action) => {
+			state.savingFailure = action.payload;
 		},
 	},
 });

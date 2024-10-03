@@ -6,14 +6,37 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const trustedDomains = {
 	default: [
-		'https://auth.insee.test',
 		'https://api-questionnaire-recensement.developpement3.insee.fr',
+		'https://auth.insee.test/auth/realms/recensement-questionnaire-menage',
 		'http://localhost:3000',
 	],
-	config_classic: [],
-	config_without_silent_login: [],
-	config_without_refresh_token: [],
-	config_without_refresh_token_silent_login: [],
-	config_google: [],
-	config_with_hash: [],
+
+	// default: {
+	// 	oidcDomains: ['https://auth.insee.test'],
+	// 	accessTokenDomains: [
+	// 		'https://api-questionnaire-recensement.developpement3.insee.fr',
+	// 	],
+	// },
 };
+
+// trustedDomains.config_show_access_token = {
+// 	domains: [
+// 		'https://api-questionnaire-recensement.developpement3.insee.fr',
+// 		'https://auth.insee.test',
+// 		'http://localhost:3000',
+// 	],
+// 	showAccessToken: true,
+// };
+
+// trustedDomains.config_separate_oidc_access_token_domains = {
+// 	oidcDomains: [
+// 		'https://api-questionnaire-recensement.developpement3.insee.fr',
+// 		'https://auth.insee.test',
+// 		'http://localhost:3000',
+// 	],
+// 	accessTokenDomains: [
+// 		'https://api-questionnaire-recensement.developpement3.insee.fr',
+// 		'https://auth.insee.test',
+// 		'http://localhost:3000',
+// 	],
+// };

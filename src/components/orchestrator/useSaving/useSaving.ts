@@ -91,7 +91,6 @@ function saflyClean(changes: ChangeEvent) {
 
 export function useSaving() {
 	const changes = useRef<ChangeEvent>({});
-	const navigate = useNavigate();
 
 	const listen = useCallback(
 		(name: string, value?: string | number | boolean) => {
@@ -117,7 +116,6 @@ export function useSaving() {
 					);
 					const { error } = await promise;
 					if (error) {
-						navigate(uri404());
 						// TODO dispatch error
 					} else {
 						saflyClean(changes.current);
@@ -140,7 +138,7 @@ export function useSaving() {
 				}
 			}
 		},
-		[unit, dispatch, navigate, collectStatus]
+		[unit, dispatch, collectStatus]
 	);
 
 	return { listen, save };
