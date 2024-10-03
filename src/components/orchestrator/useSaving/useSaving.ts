@@ -1,28 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
-import { useSaveSurveyUnitStateData } from '../../../hooks/useSaveSurveyUnitData';
+import { useCallback, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { surveyAPI } from '../../../lib/api/survey';
-import { useNavigate } from 'react-router';
-import { uri404 } from '../../../lib/domainUri';
+
 import { CollectStatusEnum } from '../../../typeStromae/type';
 import { defineCollectStatus } from '../../../redux/appSlice';
-
-function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
-	if (previous === CollectStatusEnum.Validated) {
-		return CollectStatusEnum.Validated;
-	}
-	if (changing) {
-		return CollectStatusEnum.Completed;
-	}
-
-	return previous;
-}
-
-type useSavingArgs = {
-	// setWaiting: (w: boolean) => void;
-	// setFailure: (s?: SavingFailure) => void;
-	initialCollectStatus: CollectStatusEnum;
-};
 
 // export function useSaving({
 // 	setWaiting,
@@ -103,43 +84,40 @@ export function useSaving() {
 	const unit = useAppSelector((state) => state.stromae.unit);
 	const collectStatus = useAppSelector((state) => state.stromae.collectStatus);
 
-	const save = useCallback(
-		async ({ pageTag }: { pageTag: string }) => {
-			if (unit) {
-				const isOnChange = isChanges(changes.current);
-				if (isOnChange) {
-					const promise = dispatch(
-						surveyAPI.endpoints.putSurveyUnitData.initiate({
-							unit,
-							...changes.current,
-						})
-					);
-					const { error } = await promise;
-					if (error) {
-						// TODO dispatch error
-					} else {
-						saflyClean(changes.current);
-						await dispatch(
-							surveyAPI.endpoints.putStateData.initiate({
-								currentPage: pageTag,
-								unit,
-								state: getCollectStatus(
-									isOnChange,
-									collectStatus || CollectStatusEnum.Completed
-								),
-							})
-						);
-						if (collectStatus !== CollectStatusEnum.Completed) {
-							dispatch(defineCollectStatus(CollectStatusEnum.Completed));
-						}
-
-						// TODO dispatch success
+	const save = useCallback(async () => {
+		if (unit) {
+			const isOnChange = isChanges(changes.current);
+			if (isOnChange) {
+				const promise = dispatch(
+					surveyAPI.endpoints.putSurveyUnitData.initiate({
+						unit,
+						...changes.current,
+					})
+				);
+				const { error } = await promise;
+				if (error) {
+					// TODO dispatch error
+				} else {
+					saflyClean(changes.current);
+					// await dispatch(
+					// 	surveyAPI.endpoints.putStateData.initiate({
+					// 		currentPage: pageTag,
+					// 		unit,
+					// 		state: getCollectStatus(
+					// 			isOnChange,
+					// 			collectStatus || CollectStatusEnum.Completed
+					// 		),
+					// 	})
+					// );
+					if (collectStatus !== CollectStatusEnum.Completed) {
+						dispatch(defineCollectStatus(CollectStatusEnum.Completed));
 					}
+
+					// TODO dispatch success
 				}
 			}
-		},
-		[unit, dispatch, collectStatus]
-	);
+		}
+	}, [unit, dispatch, collectStatus]);
 
 	return { listen, save };
 }

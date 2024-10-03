@@ -23,6 +23,7 @@ import { useSaving } from './useSaving';
 import { useDispatch } from 'react-redux';
 import { useAppDispatch } from '../../redux/store';
 import { surveyAPI } from '../../lib/api/survey';
+import { useSavingStateData } from './useSaving/useSavingStateDada';
 
 export function createPersonalizationMap(
 	personalization: Array<PersonalizationElement>
@@ -54,13 +55,14 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 	>(() => createPersonalizationMap(personalization), [personalization]);
 	const { currentPage: pageFromAPI, state } = stateData ?? {};
 	const [refreshControls, setRefreshControls] = useState(false);
-	// const shouldSync = useRef(false);
+	const shouldSync = useRef(false);
 	const initialCollectStatus = state ?? CollectStatusEnum.Init;
 
 	useRedirectIfAlreadyValidated(initialCollectStatus);
 	const dispatch = useAppDispatch();
 
 	const { listen, save } = useSaving();
+	const saveStateData = useSavingStateData();
 
 	// const { listenChange, saveChange } = useSaving({
 	// 	setWaiting,
@@ -138,32 +140,32 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 			typeof defaultTitle === 'string' ? defaultTitle : 'Enquête Insee',
 	});
 
-	// Gestion de la sauvegarde : tout ce qui était dans le composant Save
-	// const previousPageTag = usePrevious(pageTag);
-	// const isNewPage =
-	// 	pageTag !== undefined &&
-	// 	previousPageTag !== undefined &&
-	// 	previousPageTag !== pageTag;
+	// Sauvegarde du dataState, quand la page est tournée !
+	const previousPageTag = usePrevious(pageTag);
+	const isNewPage =
+		pageTag !== undefined &&
+		previousPageTag !== undefined &&
+		previousPageTag !== pageTag;
 
 	const handleGoNext = useCallback(() => {
 		if (isLastPage) {
 			// saveChange({ pageTag, getData });
 		} else {
-			// shouldSync.current = true;
-			save({ pageTag });
+			shouldSync.current = true;
+			save();
 			goNextPage?.();
 		}
-	}, [goNextPage, isLastPage, pageTag, save]);
+	}, [goNextPage, isLastPage, save]);
 
 	const handleGoBack = useCallback(() => {
-		// shouldSync.current = true;
+		shouldSync.current = true;
 		goPreviousPage?.();
 	}, [goPreviousPage]);
 
-	// if (isNewPage && shouldSync.current) {
-	// 	shouldSync.current = false;
-	// 	saveChange({ pageTag, getData });
-	// }
+	if (isNewPage && shouldSync.current) {
+		shouldSync.current = false;
+		saveStateData(pageTag);
+	}
 	return (
 		<Provider>
 			<CloneElements<OrchestratedElement>
