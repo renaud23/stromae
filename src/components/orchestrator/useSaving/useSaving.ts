@@ -123,9 +123,9 @@ export function useSaving() {
 						saflyClean(changes.current);
 						await dispatch(
 							surveyAPI.endpoints.putStateData.initiate({
-								page: pageTag,
+								currentPage: pageTag,
 								unit,
-								collectStatus: getCollectStatus(
+								state: getCollectStatus(
 									isOnChange,
 									collectStatus || CollectStatusEnum.Completed
 								),
