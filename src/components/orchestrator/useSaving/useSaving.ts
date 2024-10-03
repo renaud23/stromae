@@ -1,27 +1,28 @@
-// import { useCallback, useContext, useRef, useState } from 'react';
-// import { CollectStatusEnum, SavingFailure } from '../../../typeStromae/type';
-// import { loadSourceDataContext } from '../../loadSourceData/LoadSourceDataContext';
-// import { useSaveSurveyUnitStateData } from '../../../hooks/useSaveSurveyUnitData';
-
-import { useCallback, useContext, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useSaveSurveyUnitStateData } from '../../../hooks/useSaveSurveyUnitData';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { surveyAPI } from '../../../lib/api/survey';
+import { useNavigate } from 'react-router';
+import { uri404 } from '../../../lib/domainUri';
+import { CollectStatusEnum } from '../../../typeStromae/type';
+import { defineCollectStatus } from '../../../redux/appSlice';
 
-// function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
-// 	if (previous === CollectStatusEnum.Validated) {
-// 		return CollectStatusEnum.Validated;
-// 	}
-// 	if (changing) {
-// 		return CollectStatusEnum.Completed;
-// 	}
+function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
+	if (previous === CollectStatusEnum.Validated) {
+		return CollectStatusEnum.Validated;
+	}
+	if (changing) {
+		return CollectStatusEnum.Completed;
+	}
 
-// 	return previous;
-// }
+	return previous;
+}
 
-// type useSavingArgs = {
-// 	setWaiting: (w: boolean) => void;
-// 	setFailure: (s?: SavingFailure) => void;
-// 	initialCollectStatus: CollectStatusEnum;
-// };
+type useSavingArgs = {
+	// setWaiting: (w: boolean) => void;
+	// setFailure: (s?: SavingFailure) => void;
+	initialCollectStatus: CollectStatusEnum;
+};
 
 // export function useSaving({
 // 	setWaiting,
@@ -78,10 +79,19 @@ import { useSaveSurveyUnitStateData } from '../../../hooks/useSaveSurveyUnitData
 
 type ChangeEvent = Record<string, undefined | null | string | boolean | number>;
 
+function isChanges(changes: ChangeEvent) {
+	return changes && Object.keys(changes).length > 0;
+}
+
+function saflyClean(changes: ChangeEvent) {
+	if (changes) {
+		Object.keys(changes).forEach((k) => delete changes[k]);
+	}
+}
+
 export function useSaving() {
 	const changes = useRef<ChangeEvent>({});
-	// const { putSurveyUnitData } = useContext(loadSourceDataContext);
-	const saveSuData = useSaveSurveyUnitStateData();
+	const navigate = useNavigate();
 
 	const listen = useCallback(
 		(name: string, value?: string | number | boolean) => {
@@ -90,7 +100,48 @@ export function useSaving() {
 		[changes]
 	);
 
-	const save = useCallback(async () => {}, []);
+	const dispatch = useAppDispatch();
+	const unit = useAppSelector((state) => state.stromae.unit);
+	const collectStatus = useAppSelector((state) => state.stromae.collectStatus);
+
+	const save = useCallback(
+		async ({ pageTag }: { pageTag: string }) => {
+			if (unit) {
+				const isOnChange = isChanges(changes.current);
+				if (isOnChange) {
+					const promise = dispatch(
+						surveyAPI.endpoints.putSurveyUnitData.initiate({
+							unit,
+							...changes.current,
+						})
+					);
+					const { error } = await promise;
+					if (error) {
+						navigate(uri404());
+						// TODO dispatch error
+					} else {
+						saflyClean(changes.current);
+						await dispatch(
+							surveyAPI.endpoints.putStateData.initiate({
+								page: pageTag,
+								unit,
+								collectStatus: getCollectStatus(
+									isOnChange,
+									collectStatus || CollectStatusEnum.Completed
+								),
+							})
+						);
+						if (collectStatus !== CollectStatusEnum.Completed) {
+							dispatch(defineCollectStatus(CollectStatusEnum.Completed));
+						}
+
+						// TODO dispatch success
+					}
+				}
+			}
+		},
+		[unit, dispatch, navigate, collectStatus]
+	);
 
 	return { listen, save };
 }

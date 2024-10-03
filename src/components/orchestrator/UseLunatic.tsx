@@ -138,9 +138,10 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 			// saveChange({ pageTag, getData });
 		} else {
 			// shouldSync.current = true;
+			save({ pageTag });
 			goNextPage?.();
 		}
-	}, [goNextPage, isLastPage]);
+	}, [goNextPage, isLastPage, pageTag, save]);
 
 	const handleGoBack = useCallback(() => {
 		// shouldSync.current = true;

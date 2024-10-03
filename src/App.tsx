@@ -7,7 +7,6 @@ import { Optional } from './pages/optional';
 import { Portail, RoutingPortail } from './pages/portail';
 import { PostSubmit } from './pages/postSubmit';
 import { Questionnaire } from './pages/questionnaire';
-import { QuestionnaireReadOnly } from './pages/questionnaireReadOnly';
 import { Welcome } from './pages/welcome';
 import { environment } from './utils/read-env-vars';
 import { Provider } from 'react-redux';
@@ -39,11 +38,6 @@ const router = createBrowserRouter([
 	{
 		path: '/questionnaire/:survey/unite-enquetee/:unit',
 		element: <Questionnaire />,
-		errorElement: <RouteError />,
-	},
-	{
-		path: '/read-only/questionnaire/:survey/unite-enquetee/:unit',
-		element: <QuestionnaireReadOnly />,
 		errorElement: <RouteError />,
 	},
 	{

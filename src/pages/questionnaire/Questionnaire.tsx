@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AlertesSaving } from '../../components/AlertSaving/AlertesSaving';
 import { AlertesControles } from '../../components/AlertesControles';
 import { ComplementaryComponents } from '../../components/ComplementaryComponents/ComplementaryComponents';
@@ -16,14 +16,12 @@ import { AuthSecure } from '../../lib/oidc';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import { SurveyUnit } from '../../typeLunatic/type-source';
 import {
 	UNINITIALIZE,
 	useGetSurveyQuery,
 	useGetSurveyUnitQuery,
 } from '../../lib/api/survey';
-import { uri404 } from '../../lib/domainUri';
-import { defineSurveyUnit } from '../../redux/appSlice';
+import { defineSurveyUnit, defineCollectStatus } from '../../redux/appSlice';
 
 export type QuestionnaireParams = {
 	survey?: string;
@@ -57,6 +55,12 @@ export function Questionnaire(props: QuestionnaireProps) {
 		data: surveyUnitData,
 		isError,
 	} = useGetSurveyUnitQuery(unit, { skip: unit === UNINITIALIZE });
+
+	useEffect(() => {
+		if (surveyUnitData?.stateData.state) {
+			dispatch(defineCollectStatus(surveyUnitData.stateData.state));
+		}
+	}, [dispatch, surveyUnitData]);
 
 	if (source && surveyUnitData) {
 		return (

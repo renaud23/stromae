@@ -1,1 +1,0 @@
-export { QuestionnaireReadOnly } from './QuestionnaireReadOnly';
