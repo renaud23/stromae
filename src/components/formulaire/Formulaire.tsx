@@ -1,17 +1,10 @@
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
-import { OrchestratedElement } from '../../typeStromae/type';
+import { LunaticInterface, OrchestratedElement } from '../../typeStromae/type';
 import { ComponentsRenderer } from '../ComponentsRenderer';
 import { Form } from '../skeleton/Form';
-
-type Props = Pick<
-	OrchestratedElement,
-	| 'currentErrors'
-	| 'disabled'
-	| 'getComponents'
-	| 'waiting'
-	| 'pageTag'
-	| 'isLastPage'
->;
+import { useContext } from 'react';
+import { useAppSelector } from '../../redux/store';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 
 const useStyles = makeStyles()({
 	root: {
@@ -84,17 +77,15 @@ const useStyles = makeStyles()({
 	},
 });
 
-export function Formulaire(props: Props) {
-	const {
-		getComponents,
-		currentErrors,
-		disabled = false,
-		waiting,
-		pageTag,
-		isLastPage,
-	} = props;
+export function Formulaire() {
+	const onSaving = useAppSelector((s) => s.stromae.onSaving);
+	const pageTag = useAppSelector((s) => s.stromae.pageTag);
+	// const isLastPage = useAppSelector(s=>s.stromae.isLastPage)
+
+	const { getComponents } = useContext<LunaticInterface>(LunaticContext);
+
 	const { classes, cx } = useStyles();
-	if (waiting && !isLastPage) {
+	if (onSaving) {
 		return <Form />;
 	}
 	return (
@@ -102,8 +93,8 @@ export function Formulaire(props: Props) {
 			<ComponentsRenderer
 				focusKey={pageTag}
 				getComponents={getComponents}
-				currentErrors={currentErrors}
-				disabled={disabled}
+				currentErrors={{}}
+				disabled={onSaving}
 				except={['QuestionExplication', 'ConfirmationModal']}
 			/>
 		</form>

@@ -12,6 +12,7 @@ import { OrchestratedElement } from '../../typeStromae/type';
 import { BannerAddress } from './BannerAddress';
 import { useAsyncEffect } from '../../hooks/useAsyncEffect';
 import { createPersonalizationMap } from '../orchestrator/UseLunatic';
+import { useAppSelector } from '../../redux/store';
 
 const useStyles = makeStyles()({
 	container: {
@@ -48,7 +49,9 @@ function dependenciesHaveChanged(
 // this is displayed.
 
 export function DraftBanner(props: PropsWithChildren<OrchestratedElement>) {
-	const { savingFailure, currentChange, personalization } = props;
+	const savingFailure = useAppSelector((s) => s.stromae.savingFailure);
+	const { currentChange, personalization } = props;
+
 	const { classes, cx } = useStyles();
 	// saved is used as a flag to display the save message
 	const [saved, setSaved] = useState(false);

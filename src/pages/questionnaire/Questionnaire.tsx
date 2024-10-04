@@ -11,10 +11,8 @@ import { Layout } from '../../components/layout';
 import { Modals } from '../../components/modals';
 import { Continuer } from '../../components/navigation/Continuer';
 import { Precedent } from '../../components/navigation/Precedent';
-import { Orchestrator } from '../../components/orchestrator';
 import { AuthSecure } from '../../lib/oidc';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
-import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import {
 	UNINITIALIZE,
@@ -22,21 +20,21 @@ import {
 	useGetSurveyUnitQuery,
 } from '../../lib/api/survey';
 import { defineSurveyUnit, defineCollectStatus } from '../../redux/appSlice';
+import { useOrchestrator } from '../../components/orchestrator/useOrchestrator';
+import { LunaticSource } from '../../typeLunatic/type-source';
+import { SurveyUnitData } from '../../typeStromae/type';
+import { Content } from '../../components/skeleton/Content';
+import { useRedirectIfAlreadyValidated } from '../../components/orchestrator/useRedirectIfAlreadyValidated';
+import { useEffect } from 'react';
+import { LunaticContext } from './lunaticContext';
 
 export type QuestionnaireParams = {
 	survey?: string;
 	unit?: string;
 };
 
-export type QuestionnaireProps = {};
-
-const FEATURES = ['VTL', 'MD'];
-const COLLECTED = 'COLLECTED';
-
-export function Questionnaire(props: QuestionnaireProps) {
+export function Questionnaire() {
 	const { survey = UNINITIALIZE, unit = UNINITIALIZE } = useParams();
-	useDocumentTitle('Questionnaire');
-
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -45,33 +43,51 @@ export function Questionnaire(props: QuestionnaireProps) {
 		}
 	}, [dispatch, survey, unit]);
 
+	// TODO gérer isLoading
+	const { isFetching, isLoading, data, isError } = useGetSurveyUnitQuery(unit, {
+		skip: unit === UNINITIALIZE,
+	});
+
 	const { data: source } = useGetSurveyQuery(survey, {
 		skip: survey === UNINITIALIZE,
 	});
 
-	const {
-		isFetching,
-		isLoading,
-		data: surveyUnitData,
-		isError,
-	} = useGetSurveyUnitQuery(unit, { skip: unit === UNINITIALIZE });
-
 	useEffect(() => {
-		if (surveyUnitData?.stateData.state) {
-			dispatch(defineCollectStatus(surveyUnitData.stateData.state));
+		if (data?.stateData.state) {
+			dispatch(defineCollectStatus(data.stateData.state));
 		}
-	}, [dispatch, surveyUnitData]);
+	}, [dispatch, data]);
 
-	if (source && surveyUnitData) {
-		return (
-			<AuthSecure>
-				<Layout>
-					<Orchestrator
-						features={FEATURES}
-						savingType={COLLECTED}
-						source={source}
-						surveyUnitData={surveyUnitData}
-					>
+	if (source && data) {
+		return <QuestionnaireReady source={source} data={data} />;
+	}
+	return <Content />;
+}
+
+function QuestionnaireReady({
+	source,
+	data,
+}: {
+	source: LunaticSource;
+	data: SurveyUnitData;
+}) {
+	useDocumentTitle('Questionnaire');
+	useRedirectIfAlreadyValidated();
+
+	const {
+		isFirstPage,
+		isLastPage,
+		Provider,
+		pageTag,
+		pager,
+		...comportements
+	} = useOrchestrator({ source, data: data?.data });
+
+	return (
+		<AuthSecure>
+			<Provider>
+				<LunaticContext.Provider value={comportements}>
+					<Layout>
 						<DraftBanner />
 						<ContinueOrRestart />
 						<Precedent />
@@ -84,10 +100,9 @@ export function Questionnaire(props: QuestionnaireProps) {
 						</Grid>
 						<ComplementaryComponents />
 						<DevOptions />
-					</Orchestrator>
-				</Layout>
-			</AuthSecure>
-		);
-	}
-	return <>Loading...</>;
+					</Layout>
+				</LunaticContext.Provider>
+			</Provider>
+		</AuthSecure>
+	);
 }

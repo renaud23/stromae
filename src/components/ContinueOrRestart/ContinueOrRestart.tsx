@@ -1,9 +1,14 @@
-import { useState, useCallback } from 'react';
-import { OrchestratedElement } from '../../typeStromae/type';
+import { useState, useCallback, useContext } from 'react';
 import { ModalContinueOrRestart } from './ModalContinueOrRestart';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { useGetSurveyUnitQuery } from '../../lib/api/survey';
+import { useAppSelector } from '../../redux/store';
 
-export function ContinueOrRestart(props: OrchestratedElement) {
-	const { pageFromAPI, goToPage } = props;
+export function ContinueOrRestart() {
+	const { goToPage } = useContext(LunaticContext);
+	const unit = useAppSelector((s) => s.stromae.unit);
+	const { data } = useGetSurveyUnitQuery(unit);
+	const pageFromAPI = data?.stateData.currentPage;
 	const [display, setDisplay] = useState(pageFromAPI && pageFromAPI !== '1');
 
 	function onClose() {

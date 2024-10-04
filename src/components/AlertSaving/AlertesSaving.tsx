@@ -1,10 +1,10 @@
 import { Alert } from '@codegouvfr/react-dsfr/Alert';
 
-import { OrchestratedElement } from '../../typeStromae/type';
 import { fr } from '@codegouvfr/react-dsfr/fr';
+import { useAppSelector } from '../../redux/store';
 
-export function AlertesSaving(props: OrchestratedElement) {
-	const { savingFailure } = props;
+export function AlertesSaving() {
+	const savingFailure = useAppSelector((s) => s.stromae.savingFailure);
 	if (savingFailure) {
 		const { status } = savingFailure;
 		if (status === 500) {

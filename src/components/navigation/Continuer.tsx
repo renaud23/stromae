@@ -1,16 +1,18 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { Button } from '@codegouvfr/react-dsfr/Button';
-import { useNavigate, useParams } from 'react-router';
 import { isComponentsContainSequence } from '../../lib/commons/isComponentscontainSequence';
 import { ComponentType } from '../../typeLunatic/type-source';
-import { CollectStatusEnum, OrchestratedElement } from '../../typeStromae/type';
-import { uriPostEnvoi, uri404 } from '../../lib/domainUri';
-import { useSaveSurveyUnitStateData } from '../../hooks/useSaveSurveyUnitData';
 
-function getButtonTitle(getComponents: () => Array<ComponentType>) {
+import { useAppSelector } from '../../redux/store';
+import { LunaticInterface, OrchestratedElement } from '../../typeStromae/type';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+
+type GetComponents = Pick<LunaticInterface, 'getComponents'>;
+
+function getButtonTitle({ getComponents }: GetComponents) {
 	if (getComponents) {
 		const components = getComponents();
-		return components.reduce((acc, component) => {
+		return components?.reduce((acc, component) => {
 			if (component.componentType === 'Sequence') {
 				return `Commencer la saise des questions concernant l'étape ${component.title}`;
 			}
@@ -21,7 +23,7 @@ function getButtonTitle(getComponents: () => Array<ComponentType>) {
 }
 
 function getStatus(
-	getComponents: () => Array<ComponentType>,
+	{ getComponents }: GetComponents,
 	isLastPage: boolean,
 	saving: boolean
 ) {
@@ -46,63 +48,54 @@ function getStatus(
  * @returns
  */
 export function Continuer(props: OrchestratedElement) {
-	const [saving, setSaving] = useState(false);
-	const {
-		goNextPage = () => null,
-		isLastPage,
-		getComponents = () => [],
-		// `waiting` is activated to communicate to users that an API request is in process
-		waiting = false,
-		pageTag,
-	} = props;
-	const navigate = useNavigate();
-	const saveSuData = useSaveSurveyUnitStateData();
-	const { unit, survey } = useParams();
-	const buttonContent =
-		waiting || saving
-			? `Chargement`
-			: getStatus(getComponents, isLastPage ?? false, saving);
+	const onSaving = useAppSelector((s) => s.stromae.onSaving);
+	const isLastPage = useAppSelector((s) => s.stromae.isLastPage);
+	const { getComponents, goNextPage } = useContext(LunaticContext);
+
+	const buttonContent = onSaving
+		? `Chargement`
+		: getStatus({ getComponents }, isLastPage ?? false, onSaving);
 
 	const handleClick = useCallback(
 		(event: React.MouseEvent) => {
 			event.preventDefault();
 
-			if (isLastPage) {
-				setSaving(true);
-				saveSuData({
-					pageTag,
-					collectStatus: CollectStatusEnum.Validated,
-				})
-					.then(() => {
-						navigate(uriPostEnvoi(survey, unit));
-						setSaving(false);
-					})
-					.catch(() => {
-						navigate(uri404());
-						setSaving(false);
-					});
-			}
+			// if (isLastPage) {
+			// 	setSaving(true);
+			// 	saveSuData({
+			// 		pageTag,
+			// 		collectStatus: CollectStatusEnum.Validated,
+			// 	})
+			// 		.then(() => {
+			// 			navigate(uriPostEnvoi(survey, unit));
+			// 			setSaving(false);
+			// 		})
+			// 		.catch(() => {
+			// 			navigate(uri404());
+			// 			setSaving(false);
+			// 		});
+			// }
 
 			window.scrollTo(0, 0);
 			document.getElementById('button-precedent')?.focus();
-			goNextPage();
+			goNextPage?.();
 		},
-		[goNextPage, isLastPage, unit, survey, navigate, saveSuData, pageTag]
+		[goNextPage]
 	);
 
 	return (
 		<Button
 			priority="primary"
 			onClick={handleClick}
-			title={getButtonTitle(getComponents)}
+			title={getButtonTitle({ getComponents })}
 			nativeButtonProps={{
 				form: 'stromae-form',
 				type: 'submit',
-				'aria-disabled': waiting || saving,
+				'aria-disabled': onSaving,
 			}}
 			id="continue-button"
-			iconId={waiting || saving ? 'fr-icon-refresh-line' : undefined}
-			disabled={waiting || saving}
+			iconId={onSaving ? 'fr-icon-refresh-line' : undefined}
+			disabled={onSaving}
 		>
 			{buttonContent}
 		</Button>

@@ -13,14 +13,11 @@ import {
 	CollectStatusEnum,
 	OrchestratedElement,
 	PersonalizationElement,
-	SavingFailure,
 } from '../../typeStromae/type';
 import { CloneElements } from './CloneElements';
 import { OrchestratorProps } from './Orchestrator';
 import { useQuestionnaireTitle } from './useQuestionnaireTitle';
 import { useRedirectIfAlreadyValidated } from './useRedirectIfAlreadyValidated';
-import { useSaving } from './useSaving';
-import { useDispatch } from 'react-redux';
 import { useAppDispatch } from '../../redux/store';
 import { surveyAPI } from '../../lib/api/survey';
 import { useSavingStateData } from './useSaving/useSavingStateDada';
@@ -47,6 +44,7 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 		metadata,
 	} = props;
 	const [args, setArgs] = useState<Record<string, unknown>>({});
+	const dispatch = useAppDispatch();
 
 	const [currentChange, setCurrentChange] = useState<{ name: string }>();
 	const { data, stateData, personalization = [] } = surveyUnitData ?? {};
@@ -58,10 +56,8 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 	const shouldSync = useRef(false);
 	const initialCollectStatus = state ?? CollectStatusEnum.Init;
 
-	useRedirectIfAlreadyValidated(initialCollectStatus);
-	const dispatch = useAppDispatch();
+	useRedirectIfAlreadyValidated();
 
-	const { listen, save } = useSaving();
 	const saveStateData = useSavingStateData();
 
 	// const { listenChange, saveChange } = useSaving({
@@ -70,14 +66,15 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 	// 	initialCollectStatus,
 	// });
 
-	const onChange = useCallback(
-		({ name }: { name: string }, value?: string | number | boolean) => {
-			listen(name, value);
-			setCurrentChange({ name });
-			setRefreshControls(true);
-		},
-		[listen]
-	);
+	// const { listen, save } = useSaving();
+	// const onChange = useCallback(
+	// 	({ name }: { name: string }, value?: string | number | boolean) => {
+	// 		listen(name, value);
+	// 		setCurrentChange({ name });
+	// 		setRefreshControls(true);
+	// 	},
+	// 	[listen]
+	// );
 
 	const getReferentiel = useCallback(
 		async (name: string) => {
@@ -98,7 +95,6 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 			savingType,
 			autoSuggesterLoading,
 			workersBasePath: `${window.location.origin}/workers`,
-			onChange,
 		});
 	}, [
 		getReferentiel,
@@ -106,7 +102,7 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 		features,
 		savingType,
 		autoSuggesterLoading,
-		onChange,
+		// onChange,
 		paginated,
 	]);
 
@@ -152,10 +148,10 @@ export function UseLunatic(props: PropsWithChildren<OrchestratorProps>) {
 			// saveChange({ pageTag, getData });
 		} else {
 			shouldSync.current = true;
-			save();
+			// save();
 			goNextPage?.();
 		}
-	}, [goNextPage, isLastPage, save]);
+	}, [goNextPage, isLastPage]);
 
 	const handleGoBack = useCallback(() => {
 		shouldSync.current = true;
