@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { UNINITIALIZE } from '../lib/api/survey';
 import { CollectStatusEnum, SavingFailure } from '../typeStromae/type';
+import { LunaticError } from '../typeLunatic/type';
 
 export interface StromaeState {
 	survey: string;
@@ -8,8 +9,10 @@ export interface StromaeState {
 	collectStatus?: CollectStatusEnum;
 	savingFailure?: SavingFailure;
 	currentChanges: Record<string, unknown>;
+	currentErrors?: Record<string, Array<LunaticError>>;
 	onSaving: boolean;
 	pageTag?: string;
+	isCritical?: boolean;
 	isLastPage?: boolean;
 	isFirstPage?: boolean;
 }
@@ -22,8 +25,10 @@ const initialState: StromaeState = {
 	onSaving: false,
 	currentChanges: {},
 	pageTag: undefined,
+	isCritical: undefined,
 	isLastPage: undefined,
 	isFirstPage: undefined,
+	currentErrors: undefined,
 };
 
 export const stromaeState = createSlice({
@@ -55,6 +60,10 @@ export const stromaeState = createSlice({
 		defineOnSaving: (state, action) => {
 			state.onSaving = action.payload;
 		},
+		defineCurrentErrors: (state, action) => {
+			state.currentErrors = action.payload.currentErrors;
+			state.isCritical = action.payload.isCritical;
+		},
 		turningPage: (state, action) => {
 			state.pageTag = action.payload.pageTag;
 			state.isLastPage = action.payload.isLastPage;
@@ -71,4 +80,5 @@ export const {
 	resetChanges,
 	defineOnSaving,
 	turningPage,
+	defineCurrentErrors,
 } = stromaeState.actions;

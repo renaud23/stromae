@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import { OrchestratedElement } from '../../typeStromae/type';
 import { ComponentsRenderer } from '../ComponentsRenderer';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 
 const useStyles = makeStyles()({
 	root: {
@@ -11,22 +13,19 @@ const useStyles = makeStyles()({
 	},
 });
 
+const only = ['QuestionExplication'];
+
 /**
  * Components displayed at the bottom of the page
  * For instance QuestionExplication to show more detail about a question
  */
 export function ComplementaryComponents(props: OrchestratedElement) {
-	const { getComponents, currentErrors, disabled = false } = props;
 	const { classes, cx } = useStyles();
-	const only = ['QuestionExplication'];
+	const { getComponents } = useContext(LunaticContext);
 
-	if (!getComponents) {
-		return null;
-	}
+	const components = getComponents?.({ only });
 
-	const components = getComponents({ only });
-
-	if (components.length === 0) {
+	if (components?.length === 0) {
 		return null;
 	}
 
@@ -35,12 +34,7 @@ export function ComplementaryComponents(props: OrchestratedElement) {
 			id="complementary-components"
 			className={cx(classes.root, 'fr-col-12')}
 		>
-			<ComponentsRenderer
-				getComponents={getComponents}
-				currentErrors={currentErrors}
-				disabled={disabled}
-				only={only}
-			/>
+			<ComponentsRenderer only={only} />
 		</div>
 	);
 }

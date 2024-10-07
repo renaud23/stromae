@@ -2,7 +2,9 @@ import * as lunatic from '@inseefr/lunatic';
 import { OrchestratedElement } from '../../typeStromae/type';
 import { LunaticComponentContainer } from '../formulaire/LunaticComponentContainer';
 import { LunaticComponents } from '@inseefr/lunatic';
-import type { ReactNode } from 'react';
+import { useContext, type ReactNode } from 'react';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { useAppSelector } from '../../redux/store';
 
 type Props = {
 	only?: string[];
@@ -12,15 +14,11 @@ type Props = {
 } & Pick<OrchestratedElement, 'currentErrors' | 'disabled' | 'getComponents'>;
 
 export function ComponentsRenderer(props: Props) {
-	const {
-		getComponents,
-		currentErrors,
-		disabled = false,
-		only,
-		except,
-		focusKey,
-		...rest
-	} = props;
+	const { only, except, focusKey, ...rest } = props;
+
+	const { getComponents } = useContext(LunaticContext);
+	const currentErrors = useAppSelector((s) => s.stromae.currentErrors);
+	const disabled = useAppSelector((s) => s.stromae.onSaving);
 	const validComponents =
 		getComponents?.({ only, except }).filter(
 			(c) => c.componentType in lunatic

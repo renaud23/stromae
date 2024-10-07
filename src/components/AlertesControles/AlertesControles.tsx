@@ -1,7 +1,8 @@
-import { useEffect, ReactNode, useState } from 'react';
+import { useEffect, ReactNode, useState, useContext } from 'react';
 import { fr } from '@codegouvfr/react-dsfr';
-import { OrchestratedElement } from '../../typeStromae/type';
 import { ComponentType } from '../../typeLunatic/type-source';
+import { useAppSelector } from '../../redux/store';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 
 function ErrorMessage({ errorMessage }: { errorMessage: ReactNode }) {
 	if (errorMessage && Array.isArray(errorMessage)) {
@@ -26,9 +27,11 @@ function checkIfIsRoundAbout(components?: ComponentType[]) {
 	return true;
 }
 
-export function AlertesControles(props: OrchestratedElement) {
-	const { currentErrors, criticality, getComponents } = props;
-	const type = criticality ? 'fr-alert--error' : 'fr-alert--warning';
+export function AlertesControles() {
+	const currentErrors = useAppSelector((s) => s.stromae.currentErrors);
+	const isCritical = useAppSelector((s) => s.stromae.isCritical);
+	const { getComponents } = useContext(LunaticContext);
+	const type = isCritical ? 'fr-alert--error' : 'fr-alert--warning';
 	const [isInRoundabout, setIsRoundabout] = useState(false);
 
 	useEffect(() => {

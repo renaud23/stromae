@@ -1,18 +1,11 @@
-import {
-	PropsWithChildren,
-	useState,
-	useEffect,
-	useRef,
-	useContext,
-} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
 import { Tag } from '@codegouvfr/react-dsfr/Tag';
 import { fr } from '@codegouvfr/react-dsfr';
-import { OrchestratedElement } from '../../typeStromae/type';
 import { BannerAddress } from './BannerAddress';
-import { useAsyncEffect } from '../../hooks/useAsyncEffect';
-import { createPersonalizationMap } from '../orchestrator/UseLunatic';
 import { useAppSelector } from '../../redux/store';
+import { useGetSurveyUnitQuery } from '../../lib/api/survey';
+import { createPersonalizationMap } from '../../utils/createPersonlizationMap';
 
 const useStyles = makeStyles()({
 	container: {
@@ -28,62 +21,37 @@ const useStyles = makeStyles()({
 	},
 });
 
-// checks if the list of bannerLabelDependencies includes a value that just changed
-function dependenciesHaveChanged(
-	currentChange?: { name: string },
-	bannerLabelDependencies?: string | number | boolean | Array<string>
-) {
-	if (
-		!currentChange ||
-		!bannerLabelDependencies ||
-		!Array.isArray(bannerLabelDependencies)
-	) {
-		return false;
-	}
-	return bannerLabelDependencies.includes(currentChange?.name);
-}
+// TODO utiliser un remote component pour obtenir le label plutôt que tout refetch
+// Partie spécifique RP.
 
-// This component is displayed during a questionnaire.
-// Its main role is to reassure users that their data is being saved.
-// If a bannerAddress is provided through personalization in the SUData,
-// this is displayed.
-
-export function DraftBanner(props: PropsWithChildren<OrchestratedElement>) {
+export function DraftBanner() {
 	const savingFailure = useAppSelector((s) => s.stromae.savingFailure);
-	const { currentChange, personalization } = props;
+	const unit = useAppSelector((s) => s.stromae.unit);
 
 	const { classes, cx } = useStyles();
 	// saved is used as a flag to display the save message
 	const [saved, setSaved] = useState(false);
-	const [label, setlabel] = useState(personalization?.bannerLabel ?? '');
-	const bannerLabelDependencies = personalization?.bannerLabelDependencies
-		? personalization?.bannerLabelDependencies
-		: [];
+	const [label, setLabel] = useState('');
+	const [refetch, setReftech] = useState(false);
+
 	const timer = useRef<ReturnType<typeof setTimeout>>();
 	const duration = 1_500;
-	const personalizationLabel =
-		typeof personalization?.bannerLabel === 'string'
-			? personalization?.bannerLabel
-			: '';
-	const computedLabel = label ? label : personalizationLabel;
-	// const { getSurveyUnitData } = useContext(loadSourceDataContext);
 
-	// personalization is loaded on refresh, but if this value changes, it is not updated by default.
-	// By calling the API, we are sure to get the most recent update.
-	// useAsyncEffect(async () => {
-	// 	// We don't want to call the API all the time, so we check if the dependencies have changed then call the api
-	// 	if (
-	// 		getSurveyUnitData &&
-	// 		dependenciesHaveChanged(currentChange, bannerLabelDependencies)
-	// 	) {
-	// 		const updatedSUData = await getSurveyUnitData();
-	// 		const newPersonalization: Record<string, string> =
-	// 			createPersonalizationMap(updatedSUData?.personalization || []);
-	// 		setlabel(
-	// 			newPersonalization.bannerLabel ? newPersonalization.bannerLabel : ''
-	// 		);
-	// 	}
-	// }, [getSurveyUnitData, currentChange, props]);
+	const { data: surveyUnitData, isSuccess } = useGetSurveyUnitQuery(unit, {
+		refetchOnMountOrArgChange: refetch,
+	});
+
+	useEffect(() => {
+		if (isSuccess) {
+			if (surveyUnitData?.personalization) {
+				const personalization = createPersonalizationMap(
+					surveyUnitData?.personalization ?? ''
+				);
+				setLabel(`${personalization?.bannerLabel}` ?? '');
+				setReftech(false);
+			}
+		}
+	}, [isSuccess, surveyUnitData?.personalization]);
 
 	useEffect(() => {
 		if (savingFailure?.status !== 200) {
@@ -149,7 +117,7 @@ export function DraftBanner(props: PropsWithChildren<OrchestratedElement>) {
 								</Tag>
 							)}
 						</div>
-						<BannerAddress label={computedLabel as string} />
+						<BannerAddress label={label} />
 					</div>
 					<p className={fr.cx('fr-col-12', 'fr-col-md-10', 'fr-mb-0')}>
 						Vos réponses sont enregistrées automatiquement à chaque chargement

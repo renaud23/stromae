@@ -19,7 +19,10 @@ function fillValues(
 	getData: (refreshCalculated: boolean) => VariablesType
 ) {
 	return Object.keys(changes).reduce(
-		(a, name) => ({ ...a, [name]: getData?.(false).COLLECTED[name].COLLECTED }),
+		(a, name) => ({
+			...a,
+			[name]: getData?.(false)?.COLLECTED[name]?.COLLECTED,
+		}),
 		{}
 	);
 }

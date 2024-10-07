@@ -1,13 +1,6 @@
 import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { surveyAPI } from '../../../lib/api/survey';
-import { CollectStatusEnum } from '../../../typeStromae/type';
-
-type useSavingArgs = {
-	// setWaiting: (w: boolean) => void;
-	// setFailure: (s?: SavingFailure) => void;
-	initialCollectStatus: CollectStatusEnum;
-};
 
 export function useSavingStateData() {
 	const dispatch = useAppDispatch();

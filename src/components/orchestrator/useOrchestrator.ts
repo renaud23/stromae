@@ -13,6 +13,7 @@ import {
 import { useSaving } from './useSaving';
 import { usePrevious } from '../../lib/commons/usePrevious';
 import { useSavingStateData } from './useSaving/useSavingStateDada';
+import { useControls } from './useControls';
 
 const FEATURES = ['VTL', 'MD'];
 const COLLECTED = 'COLLECTED';
@@ -62,6 +63,7 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 	});
 	const save = useSaving(getData);
 	const saveStateData = useSavingStateData();
+	const compileErrors = useControls(compileControls);
 
 	const handleGoPrevious = useCallback(() => {
 		shouldSync.current = true;
@@ -69,12 +71,15 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 	}, [goPreviousPage]);
 
 	const handleGoNext = useCallback(async () => {
-		shouldSync.current = true;
-		dispatch(defineOnSaving(true));
-		await save();
-		dispatch(defineOnSaving(false));
-		goNextPage?.();
-	}, [dispatch, goNextPage, save]);
+		const { isCritical, isOnWarning } = compileErrors();
+		if (!isCritical && !isOnWarning) {
+			shouldSync.current = true;
+			dispatch(defineOnSaving(true));
+			await save();
+			dispatch(defineOnSaving(false));
+			goNextPage?.();
+		}
+	}, [dispatch, compileErrors, save, goNextPage]);
 
 	const previousPageTag = usePrevious(pageTag);
 	const isNewPage =
