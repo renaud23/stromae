@@ -31,23 +31,22 @@ export function useControls(compileControls?: CompileControls) {
 						isOnWarning.current = false;
 						return {
 							isCritical: true,
-							isOnWarning: isOnWarning.current,
+							isOnWarning: false,
 						};
 					} else {
 						isOnWarning.current = true;
 						return {
 							isCritical: false,
-							isOnWarning: isOnWarning.current,
+							isOnWarning: true,
 						};
 					}
 				}
-				return {
-					isCritical: false,
-					isOnWarning: false,
-				};
 			}
 		}
-		return { errors: undefined };
+		return {
+			isCritical: undefined,
+			isOnWarning: undefined,
+		};
 	}, [compileControls, dispatch]);
 
 	return compileErrors;
