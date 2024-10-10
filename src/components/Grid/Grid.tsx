@@ -1,8 +1,6 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
 import { PropsWithChildren } from 'react';
-import { OrchestratedElement } from '../../typeStromae/type';
-import { CloneElements } from '../orchestrator/CloneElements';
 
 const useStyles = makeStyles()({
 	container: {
@@ -16,8 +14,8 @@ const useStyles = makeStyles()({
 	},
 });
 
-export function Grid(props: PropsWithChildren<OrchestratedElement>) {
-	const { children, ...rest } = props;
+export function Grid(props: PropsWithChildren) {
+	const { children } = props;
 	const { classes, cx } = useStyles();
 	return (
 		<div className={cx(fr.cx('fr-col-12'), classes.container)}>
@@ -29,9 +27,7 @@ export function Grid(props: PropsWithChildren<OrchestratedElement>) {
 					)}
 				>
 					<div className={fr.cx('fr-col-lg-6', 'fr-col-md-9', 'fr-col-12')}>
-						<CloneElements<OrchestratedElement> {...rest}>
-							{children}
-						</CloneElements>
+						{children}
 					</div>
 				</div>
 			</div>

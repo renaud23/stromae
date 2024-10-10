@@ -1,5 +1,4 @@
 import { Alert } from '@codegouvfr/react-dsfr/Alert';
-
 import { fr } from '@codegouvfr/react-dsfr/fr';
 import { useAppSelector } from '../../redux/store';
 

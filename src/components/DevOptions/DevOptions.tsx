@@ -1,11 +1,12 @@
-import { OrchestratedElement } from '../../typeStromae/type';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import { environment } from '../../utils/read-env-vars';
+import { useContext } from 'react';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 
-const {DEBUG} = environment;
+const { DEBUG } = environment;
 
-export function DevOptions(props: OrchestratedElement) {
-	const { getData } = props;
+export function DevOptions() {
+	const { getData } = useContext(LunaticContext);
 	function handleClick() {
 		const variables = getData?.(true);
 		console.log({ variables });

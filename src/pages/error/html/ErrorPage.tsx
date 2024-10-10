@@ -1,7 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import TechnicalError from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import { MetadataSurvey } from '../../../typeStromae/type';
 import { useDocumentTitle } from '../../../utils/useDocumentTitle';

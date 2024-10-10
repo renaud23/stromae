@@ -8,11 +8,8 @@ import { Portail, RoutingPortail } from './pages/portail';
 import { PostSubmit } from './pages/postSubmit';
 import { Questionnaire } from './pages/questionnaire';
 import { Welcome } from './pages/welcome';
-import { environment } from './utils/read-env-vars';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-
-const { VISUALIZE_ENABLED } = environment;
 
 const router = createBrowserRouter([
 	{

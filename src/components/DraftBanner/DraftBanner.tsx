@@ -4,8 +4,8 @@ import { Tag } from '@codegouvfr/react-dsfr/Tag';
 import { fr } from '@codegouvfr/react-dsfr';
 import { BannerAddress } from './BannerAddress';
 import { useAppSelector } from '../../redux/store';
-import { useGetSurveyUnitQuery } from '../../lib/api/survey';
 import { createPersonalizationMap } from '../../utils/createPersonlizationMap';
+import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
 
 const useStyles = makeStyles()({
 	container: {
@@ -32,26 +32,20 @@ export function DraftBanner() {
 	// saved is used as a flag to display the save message
 	const [saved, setSaved] = useState(false);
 	const [label, setLabel] = useState('');
-	const [refetch, setReftech] = useState(false);
 
 	const timer = useRef<ReturnType<typeof setTimeout>>();
 	const duration = 1_500;
 
-	const { data: surveyUnitData, isSuccess } = useGetSurveyUnitQuery(unit, {
-		refetchOnMountOrArgChange: refetch,
-	});
+	const { data } = useGetSurveyAPI({ unit });
 
 	useEffect(() => {
-		if (isSuccess) {
-			if (surveyUnitData?.personalization) {
-				const personalization = createPersonalizationMap(
-					surveyUnitData?.personalization ?? ''
-				);
-				setLabel(`${personalization?.bannerLabel}` ?? '');
-				setReftech(false);
-			}
+		if (data?.personalization) {
+			const personalization = createPersonalizationMap(
+				data?.personalization ?? ''
+			);
+			setLabel(`${personalization?.bannerLabel}` ?? '');
 		}
-	}, [isSuccess, surveyUnitData?.personalization]);
+	}, [data]);
 
 	useEffect(() => {
 		if (savingFailure?.status !== 200) {
@@ -117,6 +111,7 @@ export function DraftBanner() {
 								</Tag>
 							)}
 						</div>
+						{/** Spécifique RP : ne peut pas se trouver dans stromae ! */}
 						<BannerAddress label={label} />
 					</div>
 					<p className={fr.cx('fr-col-12', 'fr-col-md-10', 'fr-mb-0')}>

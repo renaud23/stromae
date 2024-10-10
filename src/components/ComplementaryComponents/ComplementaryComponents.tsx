@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { OrchestratedElement } from '../../typeStromae/type';
 import { ComponentsRenderer } from '../ComponentsRenderer';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
@@ -19,7 +18,7 @@ const only = ['QuestionExplication'];
  * Components displayed at the bottom of the page
  * For instance QuestionExplication to show more detail about a question
  */
-export function ComplementaryComponents(props: OrchestratedElement) {
+export function ComplementaryComponents() {
 	const { classes, cx } = useStyles();
 	const { getComponents } = useContext(LunaticContext);
 

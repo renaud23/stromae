@@ -1,17 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { environment } from '../../utils/read-env-vars';
 import { LunaticSource } from '../../typeLunatic/type-source';
-import {
-	DataVariables,
-	MetadataSurvey,
-	StateData,
-	SurveyUnitData,
-} from '../../typeStromae/type';
+import { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type';
 
 export const UNINITIALIZE = 'RTK_UNITILIATLIZE';
-
-type PutStateData = StateData & { unit: string };
-type PutSurveyUnitData = DataVariables & { unit: string };
 
 export const surveyAPI = createApi({
 	reducerPath: 'surveyAPI',

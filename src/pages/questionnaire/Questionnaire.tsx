@@ -14,11 +14,7 @@ import { Precedent } from '../../components/navigation/Precedent';
 import { AuthSecure } from '../../lib/oidc';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { useAppDispatch } from '../../redux/store';
-import {
-	UNINITIALIZE,
-	useGetSurveyQuery,
-	useGetSurveyUnitQuery,
-} from '../../lib/api/survey';
+import { UNINITIALIZE } from '../../lib/api/survey';
 import { defineSurveyUnit, defineCollectStatus } from '../../redux/appSlice';
 import { useOrchestrator } from '../../components/orchestrator/useOrchestrator';
 import { LunaticSource } from '../../typeLunatic/type-source';
@@ -27,6 +23,7 @@ import { Content } from '../../components/skeleton/Content';
 import { useRedirectIfAlreadyValidated } from '../../components/orchestrator/useRedirectIfAlreadyValidated';
 import { useEffect } from 'react';
 import { LunaticContext } from './lunaticContext';
+import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
 
 export type QuestionnaireParams = {
 	survey?: string;
@@ -36,21 +33,7 @@ export type QuestionnaireParams = {
 export function Questionnaire() {
 	const { survey = UNINITIALIZE, unit = UNINITIALIZE } = useParams();
 	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		if (survey && unit) {
-			dispatch(defineSurveyUnit({ survey, unit }));
-		}
-	}, [dispatch, survey, unit]);
-
-	// TODO gérer isLoading
-	const { isFetching, isLoading, data, isError } = useGetSurveyUnitQuery(unit, {
-		skip: unit === UNINITIALIZE,
-	});
-
-	const { data: source } = useGetSurveyQuery(survey, {
-		skip: survey === UNINITIALIZE,
-	});
+	const { source, data } = useGetSurveyAPI({ survey, unit });
 
 	useEffect(() => {
 		if (data?.stateData.state) {
@@ -59,18 +42,25 @@ export function Questionnaire() {
 	}, [dispatch, data]);
 
 	if (source && data) {
-		return <QuestionnaireReady source={source} data={data} />;
+		return <DisplayQuestionnaire source={source} data={data} />;
 	}
 	return <Content />;
 }
 
-function QuestionnaireReady({
+function DisplayQuestionnaire({
 	source,
 	data,
 }: {
 	source: LunaticSource;
 	data: SurveyUnitData;
 }) {
+	const { survey = UNINITIALIZE, unit = UNINITIALIZE } = useParams();
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		dispatch(defineSurveyUnit({ survey, unit }));
+	}, [dispatch, survey, unit]);
+
 	useDocumentTitle('Questionnaire');
 	useRedirectIfAlreadyValidated();
 

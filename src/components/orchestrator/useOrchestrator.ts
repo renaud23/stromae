@@ -5,6 +5,7 @@ import { LunaticData } from '../../typeLunatic/type';
 import { useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { surveyAPI } from '../../lib/api/survey';
+import { environment } from '../../utils/read-env-vars';
 import {
 	appendChanges,
 	defineOnSaving,
@@ -26,9 +27,12 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 
 	const getReferentiel = useCallback(
 		async (name: string) => {
-			const { data } = await dispatch(
+			const promise = dispatch(
 				surveyAPI.endpoints.getNomenclature.initiate(name)
 			);
+
+			const { data } = await promise;
+
 			return data;
 		},
 		[dispatch]

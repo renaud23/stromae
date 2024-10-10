@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { HeaderType } from './HeaderType';
 import { DEFAULT_HEADER } from './default-header';
 import ConvertContent from '../../utils/convertContent';
@@ -9,15 +9,10 @@ import Sun from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/environment/sun.
 import Moon from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/environment/moon.svg';
 import System from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/system.svg';
 import type { ConvertContentType } from '../../utils/convertContent';
+
+import { QuickAccessItems } from './QuickAccessItems';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const iconContact = fr.cx('fr-icon-questionnaire-line');
-
-function getAuthLabel(isAuthenticated: boolean): string {
-	if (isAuthenticated) {
-		return 'Me déconnecter';
-	}
-	return 'Me connecter';
-}
 
 export type HeaderProps = {
 	header?: HeaderType;
@@ -25,8 +20,13 @@ export type HeaderProps = {
 	isAuthenticated?: boolean;
 };
 
+/**
+ *
+ * @param props
+ * @returns
+ */
 export function Header(props: HeaderProps) {
-	const { header, handleOidcAuth, isAuthenticated = false } = props;
+	const { header } = props;
 
 	const [brandTop, setBrandTop] = useState(DEFAULT_HEADER.brandTop);
 	const [homeLinkProps, setHomeLinkProps] = useState(
@@ -48,17 +48,8 @@ export function Header(props: HeaderProps) {
 
 	useEffect(() => {
 		const others = header?.quickAccessItems || [];
-		setQuickAccessItems([
-			...others,
-			{
-				iconId: 'fr-icon-lock-line',
-				buttonProps: {
-					onClick: handleOidcAuth,
-				},
-				text: getAuthLabel(isAuthenticated),
-			},
-		]);
-	}, [isAuthenticated, handleOidcAuth, header]);
+		setQuickAccessItems(others);
+	}, [header]);
 
 	return (
 		<>
@@ -77,7 +68,11 @@ export function Header(props: HeaderProps) {
 									<div className={fr.cx('fr-header__operator')}>
 										<img
 											className={fr.cx('fr-responsive-img')}
-											style={{ maxWidth: '3.5rem', height: 'auto !important', alignSelf: 'flex-start' }}
+											style={{
+												maxWidth: '3.5rem',
+												height: 'auto !important',
+												alignSelf: 'flex-start',
+											}}
 											src={operatorLogo?.imgUrl}
 											alt={operatorLogo?.alt}
 										/>
@@ -108,7 +103,8 @@ export function Header(props: HeaderProps) {
 							</div>
 							<div className={fr.cx('fr-header__tools')}>
 								<div className={fr.cx('fr-header__tools-links')}>
-									<ul className={fr.cx('fr-btns-group')}>
+									<QuickAccessItems quickAccessItems={quickAccessItems} />
+									{/* <ul className={fr.cx('fr-btns-group')}>
 										<li>
 											<Button
 												aria-controls="fr-theme-modal"
@@ -133,10 +129,18 @@ export function Header(props: HeaderProps) {
 															<Button
 																iconId={quickAccessItem.iconId}
 																linkProps={{
-																	rel: quickAccessItem.linkProps?.target === '_blank' ? "noopener noreferrer" : undefined,
+																	rel:
+																		quickAccessItem.linkProps?.target ===
+																		'_blank'
+																			? 'noopener noreferrer'
+																			: undefined,
 																	target: quickAccessItem.linkProps?.target,
 																	to: quickAccessItem.linkProps?.href,
-																	title: quickAccessItem.linkProps?.target === '_blank' ? `${quickAccessItem.text} - ouvre une nouvelle fenêtre`: quickAccessItem.text,
+																	title:
+																		quickAccessItem.linkProps?.target ===
+																		'_blank'
+																			? `${quickAccessItem.text} - ouvre une nouvelle fenêtre`
+																			: quickAccessItem.text,
 																}}
 															>
 																{quickAccessItem.text}
@@ -145,7 +149,7 @@ export function Header(props: HeaderProps) {
 													</li>
 												);
 											})}
-									</ul>
+									</ul> */}
 								</div>
 							</div>
 						</div>
@@ -190,7 +194,10 @@ export function Header(props: HeaderProps) {
 													<Button
 														iconId={quickAccessItem.iconId}
 														linkProps={{
-															rel: quickAccessItem.linkProps?.target === '_blank' ? "noopener, noreferrer" : undefined,
+															rel:
+																quickAccessItem.linkProps?.target === '_blank'
+																	? 'noopener, noreferrer'
+																	: undefined,
 															target: quickAccessItem.linkProps?.target,
 															to: quickAccessItem.linkProps?.href,
 															title:

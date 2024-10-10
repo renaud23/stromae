@@ -1,12 +1,11 @@
 import { useRef, useEffect, useContext } from 'react';
 import Button from '@codegouvfr/react-dsfr/Button';
-import { OrchestratedElement } from '../../typeStromae/type';
 import { usePrevious } from '../../lib/commons/usePrevious';
 import { fr } from '@codegouvfr/react-dsfr';
 import { useAppSelector } from '../../redux/store';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 
-export function Precedent(props: OrchestratedElement) {
+export function Precedent() {
 	const pageTag = useAppSelector((s) => s.stromae.pageTag);
 	const isFirstPage = useAppSelector((s) => s.stromae.isFirstPage);
 	const { getComponents, goPreviousPage } = useContext(LunaticContext);

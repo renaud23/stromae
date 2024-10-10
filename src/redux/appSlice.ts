@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { UNINITIALIZE } from '../lib/api/survey';
 import { CollectStatusEnum, SavingFailure } from '../typeStromae/type';
 import { LunaticError } from '../typeLunatic/type';
 
 export interface StromaeState {
-	survey: string;
-	unit: string;
+	survey?: string;
+	unit?: string;
 	collectStatus?: CollectStatusEnum;
 	savingFailure?: SavingFailure;
 	currentChanges: Record<string, unknown>;
@@ -18,8 +17,8 @@ export interface StromaeState {
 }
 
 const initialState: StromaeState = {
-	survey: UNINITIALIZE,
-	unit: UNINITIALIZE,
+	survey: undefined,
+	unit: undefined,
 	collectStatus: CollectStatusEnum.Init,
 	savingFailure: undefined,
 	onSaving: false,

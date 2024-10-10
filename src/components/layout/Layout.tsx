@@ -1,13 +1,12 @@
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import SkipLinks from '@codegouvfr/react-dsfr/SkipLinks';
 import { Header } from '../Header';
-import { HeaderAuth } from '../Header/HeaderAuth';
+
 import { Footer } from '../footer/Footer';
 import { Main } from './Main';
-import { UNINITIALIZE, useGetMetadataSurveyQuery } from '../../lib/api/survey';
 import { useAppSelector } from '../../redux/store';
-import { useNavigate } from 'react-router';
-import { uri404 } from '../../lib/domainUri';
+import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
+import { MetadataSurvey } from '../../typeStromae/type';
 
 type LayoutProps = {};
 
@@ -18,31 +17,17 @@ const defaultLinks = [
 	},
 ];
 
-export function Layout({ children, ...rest }: PropsWithChildren<LayoutProps>) {
+export function Layout({ children }: PropsWithChildren<LayoutProps>) {
 	const survey = useAppSelector((state) => state.stromae.survey);
-	const navigate = useNavigate();
+	const { metadata } = useGetSurveyAPI({ survey });
 
-	const { data, isFetching, isLoading, isSuccess, isError } =
-		useGetMetadataSurveyQuery(survey, { skip: survey === UNINITIALIZE });
-
-	if (isFetching || isLoading) {
-		<p>Les données de l'application sont en cours de chargement.</p>;
-	}
-
-	useEffect(() => {
-		if (isError) {
-			navigate(uri404());
-		}
-	}, [isError, navigate]);
-
-	if (isSuccess) {
-		const { Header: header, Footer: footer } = data;
+	if (metadata) {
+		const { Header: header, Footer: footer } = metadata;
 		return (
 			<>
 				<SkipLinks links={defaultLinks} />
-				<HeaderAuth>
-					<Header header={header} />
-				</HeaderAuth>
+				<Header header={header} />
+
 				<Main id="contenu">{children}</Main>
 				<Footer footer={footer} />
 			</>

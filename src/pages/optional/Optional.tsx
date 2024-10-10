@@ -3,7 +3,7 @@ import { Layout } from '../../components/layout';
 import { OptionalPage } from '../../components/OptionalPage';
 
 export function Optional() {
-	const { survey, optional } = useParams();
+	const { optional } = useParams();
 
 	return (
 		<Layout>
