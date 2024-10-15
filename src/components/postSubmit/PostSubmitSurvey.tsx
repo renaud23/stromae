@@ -1,15 +1,16 @@
-import { useContext, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fr } from '@codegouvfr/react-dsfr';
 import { format } from 'date-fns';
 import { fr as localeFr } from 'date-fns/esm/locale';
-import { useRemote } from '../orchestrator/useRemote';
 import { Skeleton } from '@mui/material';
 import Confirmation from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/success.svg';
-import AdditionalInformation from './AdditionalInformation';
-import { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type';
 import { uri404 } from '../../lib/domainUri';
+import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { surveyAPI } from '../../lib/api/survey';
 import { environment } from '../../utils/read-env-vars';
+import AdditionalInformation from './AdditionalInformation';
 
 const { DEPOSIT_PROOF_FILE_NAME } = environment;
 
@@ -33,33 +34,52 @@ function download(data: BlobPart, unit: string) {
 
 export function PostSubmitSurvey() {
 	const navigate = useNavigate();
-	const { unit } = useParams();
-	// const { getMetadata, getDepositProof, getSurveyUnitData } = useContext(
-	// 	loadSourceDataContext
-	// );
+	const unit = useAppSelector((s) => s.stromae.unit);
+	const survey = useAppSelector((s) => s.stromae.survey);
+	const [submissionDate, setSubmissionDate] = useState('');
 
-	function navigateError() {
-		navigate(uri404());
-	}
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		if (unit) {
+			(async () => {
+				const promise = dispatch(
+					surveyAPI.endpoints.getSurveyUnit.initiate(unit)
+				);
+				const { data, isError } = await promise;
+				if (isError) {
+					navigate(uri404());
+				}
+				if (data) {
+					setSubmissionDate(parseDate(data?.stateData?.date));
+				}
+			})();
+		}
+	}, [dispatch, navigate, unit]);
 
 	const handleDepositProof = useCallback(async () => {
 		if (unit) {
-			// download(await getDepositProof(unit), unit);
+			const promise = dispatch(
+				surveyAPI.endpoints.getDeposititProof.initiate(unit, {
+					forceRefetch: true,
+				})
+			);
+			const { data } = await promise;
+
+			if (data) {
+				download(data, unit);
+			}
 		}
 		return null;
-	}, [unit]);
+	}, [dispatch, unit]);
 
-	// const metadata = useRemote<MetadataSurvey>(getMetadata, navigateError);
-	// const surveyUnitData = useRemote<SurveyUnitData>();
-	// async () => getSurveyUnitData?.(true),
-	// navigateError
-	// const submit = metadata?.Submit;
-	// const submissionDate = parseDate(surveyUnitData?.stateData?.date);
-	// const DescriptionAdditional = submit?.DescriptionAdditional ?? null;
+	const { metadata } = useGetSurveyAPI({ survey });
+	const submit = metadata?.Submit;
+	const DescriptionAdditional = submit?.DescriptionAdditional ?? null;
 
-	// if (!metadata) {
-	// 	return <Skeleton />;
-	// }
+	if (!metadata) {
+		return <Skeleton />;
+	}
 
 	return (
 		<>
@@ -86,8 +106,8 @@ export function PostSubmitSurvey() {
 								L'Insee vous remercie pour votre collaboration à cette enquête.
 							</h2>
 							<p className={fr.cx('fr-text--lead')}>
-								Vos réponses ont été envoyées le {'submissionDate'}.&nbsp;
-								{'DescriptionAdditional'}
+								Vos réponses ont été envoyées le {submissionDate}.&nbsp;
+								{DescriptionAdditional}
 							</p>
 							{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
 							<a
@@ -132,7 +152,7 @@ export function PostSubmitSurvey() {
 					</div>
 				</div>
 			</div>
-			{/* <AdditionalInformation submit={submit} /> */}
+			{<AdditionalInformation submit={submit} />}
 		</>
 	);
 }

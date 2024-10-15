@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { CollectStatusEnum } from '../../typeStromae/type';
 import { uri404, uriPostEnvoi } from '../../lib/domainUri';
 import { useAppSelector } from '../../redux/store';

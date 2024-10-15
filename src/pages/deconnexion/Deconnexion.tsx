@@ -2,13 +2,15 @@ import { fr } from '@codegouvfr/react-dsfr';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import Information from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/information.svg';
 import { useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from '../../components/layout';
 import { useAuth } from '../../lib/oidc';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
+import { uriSurveyUnit } from '../../lib/domainUri';
+import { useStromaePage } from '../../hooks/useStromaePage';
 
 export function Deconnexion() {
-	const { survey, unit } = useParams();
+	const { survey, unit } = useStromaePage();
 	useDocumentTitle('Le recensement de la population | Page de déconnexion');
 	const { login, isAuthenticated } = useAuth();
 
@@ -20,7 +22,7 @@ export function Deconnexion() {
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			navigate(`/questionnaire/${survey}/unite-enquetee/${unit}`);
+			navigate(uriSurveyUnit(survey, unit));
 		}
 	}, [isAuthenticated, navigate, survey, unit]);
 

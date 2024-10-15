@@ -1,11 +1,16 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import { isComponentsContainSequence } from '../../lib/commons/isComponentscontainSequence';
-import { ComponentType } from '../../typeLunatic/type-source';
-
-import { useAppSelector } from '../../redux/store';
-import { LunaticInterface, OrchestratedElement } from '../../typeStromae/type';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import {
+	CollectStatusEnum,
+	LunaticInterface,
+	OrchestratedElement,
+} from '../../typeStromae/type';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { surveyAPI } from '../../lib/api/survey';
+import { useNavigate } from 'react-router';
+import { uri404, uriPostEnvoi } from '../../lib/domainUri';
 
 type GetComponents = Pick<LunaticInterface, 'getComponents'>;
 
@@ -49,38 +54,48 @@ function getStatus(
  */
 export function Continuer(props: OrchestratedElement) {
 	const onSaving = useAppSelector((s) => s.stromae.onSaving);
+	const currentPage = useAppSelector((s) => s.stromae.pageTag);
+	const survey = useAppSelector((s) => s.stromae.survey);
+	const unit = useAppSelector((s) => s.stromae.unit);
+	const [saving, setSaving] = useState(false);
 	const isLastPage = useAppSelector((s) => s.stromae.isLastPage);
+	const navigate = useNavigate();
 	const { getComponents, goNextPage } = useContext(LunaticContext);
+	const dispatch = useAppDispatch();
 
-	const buttonContent = onSaving
-		? `Chargement`
-		: getStatus({ getComponents }, isLastPage ?? false, onSaving);
+	const buttonContent =
+		saving || onSaving
+			? `Chargement`
+			: getStatus({ getComponents }, isLastPage ?? false, onSaving);
 
 	const handleClick = useCallback(
-		(event: React.MouseEvent) => {
+		async (event: React.MouseEvent) => {
 			event.preventDefault();
-
-			// if (isLastPage) {
-			// 	setSaving(true);
-			// 	saveSuData({
-			// 		pageTag,
-			// 		collectStatus: CollectStatusEnum.Validated,
-			// 	})
-			// 		.then(() => {
-			// 			navigate(uriPostEnvoi(survey, unit));
-			// 			setSaving(false);
-			// 		})
-			// 		.catch(() => {
-			// 			navigate(uri404());
-			// 			setSaving(false);
-			// 		});
-			// }
+			if (isLastPage) {
+				setSaving(true);
+				const promise = dispatch(
+					surveyAPI.endpoints.putStateData.initiate({
+						unit,
+						currentPage,
+						state: CollectStatusEnum.Validated,
+						date: new Date().getTime(),
+					})
+				);
+				try {
+					await promise;
+					navigate(uriPostEnvoi(survey, unit));
+				} catch (e) {
+					navigate(uri404());
+				} finally {
+					setSaving(false);
+				}
+			}
 
 			window.scrollTo(0, 0);
 			document.getElementById('button-precedent')?.focus();
 			goNextPage?.();
 		},
-		[goNextPage]
+		[dispatch, goNextPage, isLastPage, navigate, currentPage, survey, unit]
 	);
 
 	return (

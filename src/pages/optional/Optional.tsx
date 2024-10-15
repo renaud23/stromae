@@ -1,9 +1,9 @@
-import { useParams } from 'react-router';
 import { Layout } from '../../components/layout';
 import { OptionalPage } from '../../components/OptionalPage';
+import { useStromaePage } from '../../hooks/useStromaePage';
 
 export function Optional() {
-	const { optional } = useParams();
+	const { optional } = useStromaePage();
 
 	return (
 		<Layout>

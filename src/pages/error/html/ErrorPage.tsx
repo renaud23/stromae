@@ -1,10 +1,13 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import TechnicalError from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg';
-import { useState } from 'react';
-import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
-import { MetadataSurvey } from '../../../typeStromae/type';
+import {
+	isRouteErrorResponse,
+	useParams,
+	useRouteError,
+} from 'react-router-dom';
 import { useDocumentTitle } from '../../../utils/useDocumentTitle';
+import { useGetSurveyAPI } from '../../../lib/api/useGetSurveyUnitAPI';
 
 type ContentType = {
 	subtitle?: Record<string, string>;
@@ -56,23 +59,16 @@ export function ErrorPage({
 	code?: number;
 	errorType?: string;
 }) {
-	// const { getMetadata } = useContext(loadSourceDataContext);
-	const [metadata, setMetadata] = useState<MetadataSurvey>();
+	const { survey } = useParams();
+	const { metadata } = useGetSurveyAPI({ survey });
 
 	const content = metadata?.errorPage;
-
 	const error = useRouteError();
 	const errorStatus = isRouteErrorResponse(error) && error.status;
-
 	const { title, subtitle, paragraph } = getTextFor(code, content, errorType);
 
-	// useEffect(() => {
-	// 	getMetadata()
-	// 		.then(setMetadata)
-	// 		.catch((e) => console.log(e));
-	// }, [getMetadata]);
-
 	useDocumentTitle(title);
+
 	return (
 		<div className={fr.cx('fr-container')}>
 			<div
