@@ -1,17 +1,20 @@
 import * as lunatic from '@inseefr/lunatic';
-import { OrchestratedElement } from '../../typeStromae/type';
 import { LunaticComponentContainer } from '../formulaire/LunaticComponentContainer';
 import { LunaticComponents } from '@inseefr/lunatic';
 import { useContext, type ReactNode } from 'react';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { useAppSelector } from '../../redux/store';
+import { LunaticInterface } from '../../typeStromae/type';
+import { StromaeState } from '../../redux/appSlice';
 
 type Props = {
 	only?: string[];
 	except?: string[];
 	// Key that trigger a new autofocus on the first field
 	focusKey?: string;
-} & Pick<OrchestratedElement, 'currentErrors' | 'disabled' | 'getComponents'>;
+	disabled?: boolean;
+} & Pick<LunaticInterface, 'getComponents'> &
+	Pick<StromaeState, 'currentErrors'>;
 
 export function ComponentsRenderer(props: Props) {
 	const { only, except, focusKey, ...rest } = props;

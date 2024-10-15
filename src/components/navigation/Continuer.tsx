@@ -2,11 +2,7 @@ import { useCallback, useContext, useState } from 'react';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import { isComponentsContainSequence } from '../../lib/commons/isComponentscontainSequence';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
-import {
-	CollectStatusEnum,
-	LunaticInterface,
-	OrchestratedElement,
-} from '../../typeStromae/type';
+import { CollectStatusEnum, LunaticInterface } from '../../typeStromae/type';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { surveyAPI } from '../../lib/api/survey';
 import { useNavigate } from 'react-router';
@@ -52,7 +48,7 @@ function getStatus(
  * @param props
  * @returns
  */
-export function Continuer(props: OrchestratedElement) {
+export function Continuer() {
 	const onSaving = useAppSelector((s) => s.stromae.onSaving);
 	const currentPage = useAppSelector((s) => s.stromae.pageTag);
 	const survey = useAppSelector((s) => s.stromae.survey);
