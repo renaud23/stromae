@@ -7,7 +7,6 @@ export interface StromaeState {
 	unit?: string;
 	collectStatus?: CollectStatusEnum;
 	savingFailure?: SavingFailure;
-	currentChanges: Record<string, unknown>;
 	currentErrors?: Record<string, Array<LunaticError>>;
 	onSaving: boolean;
 	pageTag?: string;
@@ -22,7 +21,6 @@ const initialState: StromaeState = {
 	collectStatus: CollectStatusEnum.Init,
 	savingFailure: undefined,
 	onSaving: false,
-	currentChanges: {},
 	pageTag: undefined,
 	isCritical: undefined,
 	isLastPage: undefined,
@@ -47,15 +45,6 @@ export const stromaeState = createSlice({
 		defineSavingFailure: (state, action) => {
 			state.savingFailure = action.payload;
 		},
-		appendChanges: (state, action) => {
-			state.currentChanges = {
-				...state.currentChanges,
-				[action.payload]: undefined,
-			};
-		},
-		resetChanges: (state) => {
-			state.currentChanges = {};
-		},
 		defineOnSaving: (state, action) => {
 			state.onSaving = action.payload;
 		},
@@ -75,8 +64,7 @@ export const {
 	defineSurveyUnit,
 	defineCollectStatus,
 	defineSavingFailure,
-	appendChanges,
-	resetChanges,
+
 	defineOnSaving,
 	turningPage,
 	defineCurrentErrors,

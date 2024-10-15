@@ -5,12 +5,11 @@ import { CollectStatusEnum, VariablesType } from '../../../typeStromae/type';
 import {
 	defineCollectStatus,
 	defineSavingFailure,
-	resetChanges,
 } from '../../../redux/appSlice';
 
 type ChangeEvent = Record<string, unknown>;
 
-function isChanges(changes: ChangeEvent) {
+function isChanges(changes?: ChangeEvent) {
 	return changes && Object.keys(changes).length > 0;
 }
 
@@ -32,33 +31,36 @@ export function useSaving(
 ) {
 	const dispatch = useAppDispatch();
 	const unit = useAppSelector((state) => state.stromae.unit);
-	const currentChanges = useAppSelector((s) => s.stromae.currentChanges);
 	const collectStatus = useAppSelector((state) => state.stromae.collectStatus);
 
-	const save = useCallback(async () => {
-		if (unit) {
-			const isOnChange = isChanges(currentChanges);
-			if (isOnChange) {
-				dispatch(defineSavingFailure(undefined));
-				const promise = dispatch(
-					surveyAPI.endpoints.putSurveyUnitData.initiate({
-						unit,
-						...fillValues(currentChanges, getData),
-					})
-				);
-				const { error } = await promise;
-				if (error) {
-					dispatch(defineSavingFailure({ status: 500 }));
-				} else {
-					dispatch(resetChanges());
-					dispatch(defineSavingFailure({ status: 200 }));
-					if (collectStatus !== CollectStatusEnum.Completed) {
-						dispatch(defineCollectStatus(CollectStatusEnum.Completed));
+	const save = useCallback(
+		async (currentChanges?: Record<string, unknown>) => {
+			if (unit) {
+				const isOnChange = isChanges(currentChanges);
+				if (currentChanges && isOnChange) {
+					dispatch(defineSavingFailure(undefined));
+					const promise = dispatch(
+						surveyAPI.endpoints.putSurveyUnitData.initiate({
+							unit,
+							...fillValues(currentChanges, getData),
+						})
+					);
+					const { error } = await promise;
+					if (error) {
+						dispatch(defineSavingFailure({ status: 500 }));
+					} else {
+						dispatch(defineSavingFailure({ status: 200 }));
+						if (collectStatus !== CollectStatusEnum.Completed) {
+							dispatch(defineCollectStatus(CollectStatusEnum.Completed));
+						}
+						return true;
 					}
 				}
 			}
-		}
-	}, [unit, currentChanges, dispatch, getData, collectStatus]);
+			return false;
+		},
+		[unit, dispatch, getData, collectStatus]
+	);
 
 	return save;
 }

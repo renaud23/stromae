@@ -5,12 +5,7 @@ import { LunaticData } from '../../typeLunatic/type';
 import { useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { surveyAPI } from '../../lib/api/survey';
-import { environment } from '../../utils/read-env-vars';
-import {
-	appendChanges,
-	defineOnSaving,
-	turningPage,
-} from '../../redux/appSlice';
+import { defineOnSaving, turningPage } from '../../redux/appSlice';
 import { useSaving } from './useSaving';
 import { usePrevious } from '../../lib/commons/usePrevious';
 import { useSavingStateData } from './useSaving/useSavingStateDada';
@@ -21,29 +16,32 @@ const COLLECTED = 'COLLECTED';
 
 type UseOrchestrator = { source?: LunaticSource; data?: LunaticData };
 
+function resolveChanges(changes: Array<string>) {
+	return changes.reduce(
+		(acc, curr) => (curr in acc ? acc : { ...acc, [curr]: null }),
+		{}
+	);
+}
+
 export function useOrchestrator({ source, data }: UseOrchestrator) {
 	const dispatch = useAppDispatch();
 	const shouldSync = useRef(false);
+	const currentChanges = useRef<Array<string>>([]);
 
 	const getReferentiel = useCallback(
 		async (name: string) => {
 			const promise = dispatch(
 				surveyAPI.endpoints.getNomenclature.initiate(name)
 			);
-
 			const { data } = await promise;
-
 			return data;
 		},
 		[dispatch]
 	);
 
-	const onChange = useCallback(
-		({ name }: { name: string }) => {
-			dispatch(appendChanges(name));
-		},
-		[dispatch]
-	);
+	const onChange = useCallback(({ name }: { name: string }) => {
+		currentChanges.current.push(name);
+	}, []);
 
 	const {
 		getComponents,
@@ -80,7 +78,10 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 		if (!isCritical && !isOnWarning) {
 			shouldSync.current = true;
 			dispatch(defineOnSaving(true));
-			await save();
+			const success = await save(resolveChanges(currentChanges.current));
+			if (success) {
+				currentChanges.current.splice(0, currentChanges.current.length);
+			}
 			dispatch(defineOnSaving(false));
 			goNextPage?.();
 		}
