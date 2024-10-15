@@ -18,7 +18,7 @@ export interface StromaeState {
 const initialState: StromaeState = {
 	survey: undefined,
 	unit: undefined,
-	collectStatus: CollectStatusEnum.Init,
+	collectStatus: undefined,
 	savingFailure: undefined,
 	onSaving: false,
 	pageTag: undefined,

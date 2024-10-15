@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { surveyAPI } from '../../lib/api/survey';
 import { environment } from '../../utils/read-env-vars';
 import AdditionalInformation from './AdditionalInformation';
+import { CollectStatusEnum } from '../../typeStromae/type';
 
 const { DEPOSIT_PROOF_FILE_NAME } = environment;
 
@@ -37,12 +38,27 @@ export function PostSubmitSurvey() {
 	const unit = useAppSelector((s) => s.stromae.unit);
 	const survey = useAppSelector((s) => s.stromae.survey);
 	const [submissionDate, setSubmissionDate] = useState('');
+	const { metadata, data } = useGetSurveyAPI({ survey, unit });
 
 	const dispatch = useAppDispatch();
+	const collectStatus = useAppSelector((s) => s.stromae.collectStatus);
+
+	/**
+	 * l'utilisateur arrive directement sur postenvoi, mais il n'a pas validé son questionnaire !
+	 */
+	useEffect(() => {
+		if (
+			!collectStatus &&
+			data?.stateData.state !== CollectStatusEnum.Validated
+		) {
+			navigate('/');
+		}
+	}, [collectStatus, data, navigate]);
 
 	useEffect(() => {
 		if (unit) {
 			(async () => {
+				/* force refetch pour être sur de présenter la bonne heure de validation */
 				const promise = dispatch(
 					surveyAPI.endpoints.getSurveyUnit.initiate(unit)
 				);
@@ -73,7 +89,6 @@ export function PostSubmitSurvey() {
 		return null;
 	}, [dispatch, unit]);
 
-	const { metadata } = useGetSurveyAPI({ survey });
 	const submit = metadata?.Submit;
 	const DescriptionAdditional = submit?.DescriptionAdditional ?? null;
 

@@ -1,8 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr/fr';
 import ConvertContent, { ConvertContentType } from '../../utils/convertContent';
-
 import { Link } from 'react-router-dom';
-import { AppVersion } from '../AppVersion/AppVersion';
+import { AppVersion } from './AppVersion';
 import { FooterType } from './FooterType';
 
 const DEFAULT_FOOTER: FooterType = {
@@ -16,7 +15,7 @@ const DEFAULT_FOOTER: FooterType = {
 	homeLinkProps: undefined,
 	license: undefined,
 	operatorLogo: undefined,
-	appSupplementaire: undefined
+	appSupplementaire: undefined,
 };
 
 type FooterProps = { footer?: FooterType };
@@ -33,7 +32,7 @@ export function Footer(props: FooterProps) {
 		websiteMapLinkProps,
 		license,
 		operatorLogo,
-		appSupplementaire
+		appSupplementaire,
 	} = props.footer || DEFAULT_FOOTER;
 	// We don't use the React DSFR Footer component because the links are not correctly displayed with nvda (the links are all on one line)
 	return (
@@ -49,7 +48,9 @@ export function Footer(props: FooterProps) {
 						<Link
 							className={fr.cx('fr-footer__brand-link')}
 							to="/"
-							title={`Accueil - ${homeLinkProps && homeLinkProps.title} - République Française`}
+							title={`Accueil - ${
+								homeLinkProps && homeLinkProps.title
+							} - République Française`}
 						>
 							<img
 								className={fr.cx('fr-footer__logo')}
@@ -161,7 +162,10 @@ export function Footer(props: FooterProps) {
 							</li>
 						))}
 						<li className={fr.cx('fr-footer__bottom-item')}>
-							<AppVersion className={fr.cx('fr-footer__bottom-link')} appSupplementaire={appSupplementaire} />
+							<AppVersion
+								className={fr.cx('fr-footer__bottom-link')}
+								appSupplementaire={appSupplementaire}
+							/>
 						</li>
 					</ul>
 					<div className={fr.cx('fr-footer__bottom-copy')}>

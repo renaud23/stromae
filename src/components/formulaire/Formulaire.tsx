@@ -77,7 +77,6 @@ const useStyles = makeStyles()({
 export function Formulaire() {
 	const onSaving = useAppSelector((s) => s.stromae.onSaving);
 	const pageTag = useAppSelector((s) => s.stromae.pageTag);
-	// const isLastPage = useAppSelector(s=>s.stromae.isLastPage)
 
 	const { classes, cx } = useStyles();
 	if (onSaving) {

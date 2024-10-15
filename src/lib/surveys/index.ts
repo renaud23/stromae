@@ -1,1 +1,0 @@
-export { surveyApi } from './surveysApi';
