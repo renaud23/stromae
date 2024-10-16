@@ -7,6 +7,7 @@ import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { surveyAPI } from '../../lib/api/survey';
 import { useNavigate } from 'react-router';
 import { uri404, uriPostEnvoi } from '../../lib/domainUri';
+import { defineCollectStatus } from '../../redux/appSlice';
 
 type GetComponents = Pick<LunaticInterface, 'getComponents'>;
 
@@ -79,6 +80,7 @@ export function Continuer() {
 				);
 				try {
 					await promise;
+					dispatch(defineCollectStatus(CollectStatusEnum.Validated));
 					navigate(uriPostEnvoi(survey, unit));
 				} catch (e) {
 					navigate(uri404());

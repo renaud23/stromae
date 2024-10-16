@@ -11,7 +11,7 @@ export function AlertesSaving() {
 				<Alert
 					className={fr.cx('fr-mb-3w')}
 					closable
-					description="Vos données n'ont pu être sauvegardées, veuillez réessayer ou contacter l'assistance."
+					description="Vos données n'ont pu être sauvegardées, veuillez réessayer."
 					severity="error"
 					title="Une erreur est survenue lors de la sauvegarde de vos données"
 				/>

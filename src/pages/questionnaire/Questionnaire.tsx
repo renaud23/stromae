@@ -33,8 +33,10 @@ export function Questionnaire() {
 	const { survey, unit } = useStromaePage();
 	const { source, data } = useGetSurveyAPI({ survey, unit });
 	const collectStatus = data?.stateData.state;
+	useRedirectIfAlreadyValidated();
 	const dispatch = useAppDispatch();
 
+	/* initialisation du status à l'arrivée sur le questionnaire, avec la valeur issue de l'API */
 	useEffect(() => {
 		dispatch(defineCollectStatus(collectStatus));
 	}, [collectStatus, dispatch]);
@@ -53,7 +55,6 @@ function DisplayQuestionnaire({
 	data: SurveyUnitData;
 }) {
 	useDocumentTitle('Questionnaire');
-	useRedirectIfAlreadyValidated();
 
 	const {
 		isFirstPage,
