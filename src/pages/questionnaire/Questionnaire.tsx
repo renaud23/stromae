@@ -30,10 +30,12 @@ export type QuestionnaireParams = {
 };
 
 export function Questionnaire() {
-	const { survey, unit } = useStromaePage();
-	const { source, data } = useGetSurveyAPI({ survey, unit });
-	const collectStatus = data?.stateData.state;
 	useRedirectIfAlreadyValidated();
+	const { survey, unit } = useStromaePage();
+	const { source, data, metadata } = useGetSurveyAPI({ survey, unit });
+	useDocumentTitle('Questionnaire', metadata);
+	const collectStatus = data?.stateData.state;
+
 	const dispatch = useAppDispatch();
 
 	/* initialisation du status à l'arrivée sur le questionnaire, avec la valeur issue de l'API */
@@ -54,8 +56,6 @@ function DisplayQuestionnaire({
 	source: LunaticSource;
 	data: SurveyUnitData;
 }) {
-	useDocumentTitle('Questionnaire');
-
 	const {
 		isFirstPage,
 		isLastPage,

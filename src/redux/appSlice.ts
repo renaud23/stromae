@@ -64,7 +64,6 @@ export const {
 	defineSurveyUnit,
 	defineCollectStatus,
 	defineSavingFailure,
-
 	defineOnSaving,
 	turningPage,
 	defineCurrentErrors,

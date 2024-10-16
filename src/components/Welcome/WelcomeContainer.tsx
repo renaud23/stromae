@@ -1,14 +1,12 @@
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import { Skeleton } from '@mui/material';
 import { useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import { fr } from '@codegouvfr/react-dsfr';
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { useAuth, useAuthUser } from '../../lib/oidc';
 import ConvertContent from '../../utils/convertContent';
 import { themeStringToVariable } from '../../utils/themeStringToVariable';
-import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { RespondantsList } from './RespondantsList';
 import { WelcomeQuestions } from './WelcomeQuestions';
 import { useAppSelector } from '../../redux/store';
@@ -17,11 +15,9 @@ import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
 export function WelcomeContainer() {
 	const theme = useColors();
 	const navigate = useNavigate();
-	const { unit } = useParams();
+	const unit = useAppSelector((s) => s.stromae.unit);
 	const { oidcUser } = useAuthUser();
 	const { login } = useAuth();
-
-	useDocumentTitle("Page d'accueil");
 
 	const survey = useAppSelector((state) => state.stromae.survey);
 	const { metadata } = useGetSurveyAPI({ survey });

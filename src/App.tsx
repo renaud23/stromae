@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import { AuthProvider } from './components/auth';
 import { Deconnexion } from './pages/deconnexion';
 import { RouteError } from './pages/error/Error';

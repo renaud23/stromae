@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
-import { useMetadata } from '../hooks/useMetadata';
+import { MetadataSurvey } from '../typeStromae/type';
 
 function concat({ title, header }: { title?: string; header?: string }) {
 	return `${title ?? ''}${title && header ? ' | ' : ''}${header ?? ''}`;
 }
 
-export function useDocumentTitle(title?: string | null) {
-	const metadata = useMetadata();
+export function useDocumentTitle(
+	title?: string | null,
+	metadata?: MetadataSurvey
+) {
 	const header = metadata?.Header?.serviceTitle as string;
 
 	useEffect(() => {

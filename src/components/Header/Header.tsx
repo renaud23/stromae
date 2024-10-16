@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { HeaderType } from './HeaderType';
 import { DEFAULT_HEADER } from './default-header';
 import ConvertContent from '../../utils/convertContent';

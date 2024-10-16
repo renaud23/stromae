@@ -1,6 +1,7 @@
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MetadataSurvey } from '../typeStromae/type';
-import { useAsyncEffect } from './useAsyncEffect';
+import { useAppDispatch, useAppSelector } from '../redux/store';
+import { surveyAPI } from '../lib/api/survey';
 
 /**
  *
@@ -8,11 +9,20 @@ import { useAsyncEffect } from './useAsyncEffect';
  */
 export function useMetadata() {
 	const [metadata, setMetadata] = useState<MetadataSurvey>();
-	// const { getMetadata } = useContext(loadSourceDataContext);
+	const survey = useAppSelector((s) => s.stromae.survey);
+	const dispatch = useAppDispatch();
+	useEffect(() => {
+		if (survey) {
+			const promise = dispatch(
+				surveyAPI.endpoints.getMetadataSurvey.initiate(survey)
+			);
 
-	// useAsyncEffect(async () => {
-	// 	setMetadata(await getMetadata());
-	// }, [getMetadata]);
+			(async () => {
+				const { data } = await promise;
+				setMetadata(data);
+			})();
+		}
+	}, [dispatch, survey]);
 
 	return metadata;
 }

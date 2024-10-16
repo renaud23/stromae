@@ -27,6 +27,7 @@ export function useControls(compileControls?: CompileControls) {
 				const compiled = compileControls();
 				if (compiled.currentErrors) {
 					dispatch(defineCurrentErrors(compiled));
+
 					if (compiled.isCritical) {
 						isOnWarning.current = false;
 						return {

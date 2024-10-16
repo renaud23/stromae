@@ -4,6 +4,8 @@ import { Layout } from '../../components/layout';
 import { WelcomeContainer } from '../../components/Welcome';
 import { useAuthUser } from '../../lib/oidc';
 import { useStromaePage } from '../../hooks/useStromaePage';
+import { useDocumentTitle } from '../../utils/useDocumentTitle';
+import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
 
 /**
  * TODO filtrer sur DEFAULT_SURVEY
@@ -13,6 +15,8 @@ export function Portail() {
 	const navigate = useNavigate();
 	const { survey } = useStromaePage();
 	const { oidcUser } = useAuthUser();
+	const { metadata } = useGetSurveyAPI({ survey });
+	useDocumentTitle("Page d'accueil", metadata);
 
 	useEffect(() => {
 		if (!oidcUser || !oidcUser.preferred_username) {

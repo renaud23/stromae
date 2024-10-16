@@ -1,9 +1,11 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import System from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/system.svg';
+import { useMetadata } from '../../hooks/useMetadata';
 
 export function Authenticating() {
-	useDocumentTitle('Page de chargement vers la page de connexion');
+	const metadata = useMetadata();
+	useDocumentTitle('Page de chargement vers la page de connexion', metadata);
 	return (
 		<div className={fr.cx('fr-container')} aria-live="polite" aria-busy="true">
 			<div
