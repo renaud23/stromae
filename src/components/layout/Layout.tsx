@@ -1,12 +1,10 @@
 import { PropsWithChildren } from 'react';
 import SkipLinks from '@codegouvfr/react-dsfr/SkipLinks';
 import { Header } from '../Header';
-
 import { Footer } from '../footer/Footer';
 import { Main } from './Main';
 import { useAppSelector } from '../../redux/store';
 import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
-import { MetadataSurvey } from '../../typeStromae/type';
 
 type LayoutProps = {};
 

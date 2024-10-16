@@ -1,17 +1,17 @@
-import { useContext, useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 import { uri404 } from '../../lib/domainUri';
-import { useAsyncEffect } from '../../hooks/useAsyncEffect';
 import {
 	OptionalPageElementsEnum,
 	AcceptedElements,
-	MetadataSurvey,
 } from '../../typeStromae/type';
 import { Link } from './elements/Link';
 import { Title } from './elements/Title';
 import { List } from './elements/List';
 import { Section } from './elements/Section';
 import { fr } from '@codegouvfr/react-dsfr';
+import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
+import { useAppSelector } from '../../redux/store';
 
 export function createPageElement(element: AcceptedElements, altId: string) {
 	const { type, id } = element;
@@ -42,9 +42,9 @@ function createContent(
 }
 
 export function OptionalPage({ name }: { name?: string }) {
-	// const { getMetadata } = useContext(loadSourceDataContext);
+	const survey = useAppSelector((s) => s.stromae.survey);
 	const [content, setContent] = useState<Array<AcceptedElements>>([]);
-	const [metadata, setMetadata] = useState<MetadataSurvey>();
+	const { metadata } = useGetSurveyAPI({ survey });
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -58,10 +58,6 @@ export function OptionalPage({ name }: { name?: string }) {
 	}, [name, metadata, navigate]);
 
 	const body = createContent(content);
-
-	useAsyncEffect(async () => {
-		// setMetadata(await getMetadata());
-	}, []);
 
 	return (
 		<div

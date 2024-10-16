@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router';
 import { useAppDispatch } from '../../redux/store';
 import { useOidc } from '@axa-fr/react-oidc';
 import { LunaticSource } from '../../typeLunatic/type-source';
-
 import { useCallback, useEffect, useState } from 'react';
 import { uri404 } from '../domainUri';
 import { QueryActionCreatorResult } from '@reduxjs/toolkit/query';
