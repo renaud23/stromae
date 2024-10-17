@@ -1,18 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CollectStatusEnum, SavingFailure } from '../typeStromae/type';
-import { LunaticError } from '../typeLunatic/type';
 
 export interface StromaeState {
 	survey?: string;
 	unit?: string;
 	collectStatus?: CollectStatusEnum;
 	savingFailure?: SavingFailure;
-	currentErrors?: Record<string, Array<LunaticError>>;
+	// currentErrors?: Record<string, Array<LunaticError>>;
 	onSaving: boolean;
 	pageTag?: string;
 	isCritical?: boolean;
 	isLastPage?: boolean;
 	isFirstPage?: boolean;
+
+	startTurningPage: boolean;
+	startControls: boolean;
+	isOnError: boolean;
+	isOnWarning: boolean;
 }
 
 const initialState: StromaeState = {
@@ -25,7 +29,10 @@ const initialState: StromaeState = {
 	isCritical: undefined,
 	isLastPage: undefined,
 	isFirstPage: undefined,
-	currentErrors: undefined,
+	startTurningPage: false,
+	startControls: false,
+	isOnError: false,
+	isOnWarning: false,
 };
 
 export const stromaeState = createSlice({
@@ -48,14 +55,20 @@ export const stromaeState = createSlice({
 		defineOnSaving: (state, action) => {
 			state.onSaving = action.payload;
 		},
-		defineCurrentErrors: (state, action) => {
-			state.currentErrors = action.payload.currentErrors;
-			state.isCritical = action.payload.isCritical;
+		askForTurningPage: (state) => {
+			state.startTurningPage = true;
+			state.startControls = true;
+		},
+		terminateControls: (state, action) => {
+			state.startControls = false;
+			state.isOnError = action.payload.isOnError;
+			state.isOnWarning = action.payload.isOnWarning;
 		},
 		turningPage: (state, action) => {
 			state.pageTag = action.payload.pageTag;
 			state.isLastPage = action.payload.isLastPage;
 			state.isFirstPage = action.payload.isFirstPage;
+			state.startTurningPage = false;
 		},
 	},
 });
@@ -66,5 +79,6 @@ export const {
 	defineSavingFailure,
 	defineOnSaving,
 	turningPage,
-	defineCurrentErrors,
+	terminateControls,
+	askForTurningPage,
 } = stromaeState.actions;

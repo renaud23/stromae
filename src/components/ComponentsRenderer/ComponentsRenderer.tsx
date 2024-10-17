@@ -5,7 +5,8 @@ import { useContext, type ReactNode } from 'react';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { useAppSelector } from '../../redux/store';
 import { LunaticInterface } from '../../typeStromae/type';
-import { StromaeState } from '../../redux/appSlice';
+import { LunaticError } from '../../typeLunatic/type-source';
+import { useControls } from '../orchestrator/useControls';
 
 type Props = {
 	only?: string[];
@@ -13,14 +14,14 @@ type Props = {
 	// Key that trigger a new autofocus on the first field
 	focusKey?: string;
 	disabled?: boolean;
-} & Pick<LunaticInterface, 'getComponents'> &
-	Pick<StromaeState, 'currentErrors'>;
+	currentErrors?: Record<string, Array<LunaticError>>;
+} & Pick<LunaticInterface, 'getComponents'>;
 
 export function ComponentsRenderer(props: Props) {
 	const { only, except, focusKey, ...rest } = props;
 
 	const { getComponents } = useContext(LunaticContext);
-	const currentErrors = useAppSelector((s) => s.stromae.currentErrors);
+	const currentErrors = useControls();
 	const disabled = useAppSelector((s) => s.stromae.onSaving);
 	const validComponents =
 		getComponents?.({ only, except }).filter(

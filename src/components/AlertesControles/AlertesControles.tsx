@@ -1,6 +1,6 @@
 import { useEffect, ReactNode, useState, useContext } from 'react';
 import { fr } from '@codegouvfr/react-dsfr';
-import { ComponentType } from '../../typeLunatic/type-source';
+import { ComponentType, LunaticError } from '../../typeLunatic/type-source';
 import { useAppSelector } from '../../redux/store';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 
@@ -26,9 +26,8 @@ function checkIfIsRoundAbout(components?: ComponentType[]) {
 	}
 	return true;
 }
-
+const currentErrors: Record<string, Array<LunaticError>> = {};
 export function AlertesControles() {
-	const currentErrors = useAppSelector((s) => s.stromae.currentErrors);
 	const isCritical = useAppSelector((s) => s.stromae.isCritical);
 	const { getComponents } = useContext(LunaticContext);
 	const type = isCritical ? 'fr-alert--error' : 'fr-alert--warning';
@@ -38,7 +37,7 @@ export function AlertesControles() {
 		if (currentErrors) {
 			document.getElementById('alert-errors')?.focus();
 		}
-	}, [currentErrors]);
+	}, []);
 
 	useEffect(() => {
 		const components = getComponents?.();

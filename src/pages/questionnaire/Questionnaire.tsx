@@ -56,14 +56,8 @@ function DisplayQuestionnaire({
 	source: LunaticSource;
 	data: SurveyUnitData;
 }) {
-	const {
-		isFirstPage,
-		isLastPage,
-		Provider,
-		pageTag,
-		pager,
-		...comportements
-	} = useOrchestrator({ source, data: data?.data });
+	const { isFirstPage, isLastPage, Provider, ...comportements } =
+		useOrchestrator({ source, data: data?.data });
 
 	return (
 		<AuthSecure>

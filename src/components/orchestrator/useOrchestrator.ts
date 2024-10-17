@@ -3,13 +3,15 @@ import * as custom from '@inseefr/lunatic-dsfr';
 import { LunaticSource } from '../../typeLunatic/type-source';
 import { LunaticData } from '../../typeLunatic/type';
 import { useCallback, useEffect, useRef } from 'react';
-import { useAppDispatch } from '../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { surveyAPI } from '../../lib/api/survey';
-import { defineOnSaving, turningPage } from '../../redux/appSlice';
+import {
+	askForTurningPage,
+	defineOnSaving,
+	turningPage,
+} from '../../redux/appSlice';
 import { useSaving } from './useSaving';
-import { usePrevious } from '../../lib/commons/usePrevious';
 import { useSavingStateData } from './useSaving/useSavingStateDada';
-import { useControls } from './useControls';
 
 const FEATURES = ['VTL', 'MD'];
 const COLLECTED = 'COLLECTED';
@@ -25,8 +27,12 @@ function resolveChanges(changes: Array<string>) {
 
 export function useOrchestrator({ source, data }: UseOrchestrator) {
 	const dispatch = useAppDispatch();
-	const shouldSync = useRef(false);
 	const currentChanges = useRef<Array<string>>([]);
+
+	const startTurningPage = useAppSelector((s) => s.stromae.startTurningPage);
+	const startControls = useAppSelector((s) => s.stromae.startControls);
+	const isOnWarning = useAppSelector((s) => s.stromae.isOnWarning);
+	const isOnError = useAppSelector((s) => s.stromae.isOnError);
 
 	const getReferentiel = useCallback(
 		async (name: string) => {
@@ -54,7 +60,6 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 		Provider,
 		compileControls,
 		pageTag,
-		pager,
 	} = useLunatic(source, data, {
 		getReferentiel,
 		custom,
@@ -66,41 +71,49 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 	});
 	const save = useSaving(getData);
 	const saveStateData = useSavingStateData();
-	const compileErrors = useControls(compileControls);
 
 	const handleGoPrevious = useCallback(() => {
-		shouldSync.current = true;
 		goPreviousPage?.();
 	}, [goPreviousPage]);
 
 	const handleGoNext = useCallback(async () => {
-		const { isCritical, isOnWarning } = compileErrors();
-		if (!isCritical && !isOnWarning) {
-			shouldSync.current = true;
-			dispatch(defineOnSaving(true));
-			const success = await save(resolveChanges(currentChanges.current));
-			if (success) {
-				currentChanges.current.splice(0, currentChanges.current.length);
-			}
-			dispatch(defineOnSaving(false));
-			goNextPage?.();
-		}
-	}, [dispatch, compileErrors, save, goNextPage]);
+		dispatch(askForTurningPage());
+	}, [dispatch]);
 
-	const previousPageTag = usePrevious(pageTag);
-	const isNewPage =
-		pageTag !== undefined &&
-		previousPageTag !== undefined &&
-		previousPageTag !== pageTag;
-
-	if (isNewPage && shouldSync.current) {
-		shouldSync.current = false;
-		saveStateData(pageTag);
-	}
-
+	/* 
+	 	Gestion de page suivante 
+	*/
 	useEffect(() => {
+		if (startTurningPage && !startControls) {
+			(async () => {
+				if (!isOnWarning && !isOnError) {
+					goNextPage();
+					dispatch(defineOnSaving(true));
+					const success = await save(resolveChanges(currentChanges.current));
+					if (success) {
+						currentChanges.current.splice(0, currentChanges.current.length);
+					}
+					dispatch(defineOnSaving(false));
+				}
+			})();
+		}
+	}, [
+		startControls,
+		isOnWarning,
+		isOnError,
+		dispatch,
+		save,
+		startTurningPage,
+		goNextPage,
+	]);
+
+	/* 
+		Page tournée
+	*/
+	useEffect(() => {
+		saveStateData(pageTag);
 		dispatch(turningPage({ isFirstPage, isLastPage, pageTag }));
-	}, [pageTag, isLastPage, isFirstPage, dispatch]);
+	}, [pageTag, isLastPage, isFirstPage, dispatch, saveStateData]);
 
 	return {
 		getComponents,
@@ -112,8 +125,5 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 		getData,
 		Provider,
 		compileControls,
-		pageTag,
-		pager,
-		save,
 	};
 }

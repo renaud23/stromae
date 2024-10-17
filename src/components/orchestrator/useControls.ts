@@ -1,54 +1,51 @@
-import { useCallback, useRef } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LunaticError } from '../../typeLunatic/type';
-import { useAppDispatch } from '../../redux/store';
-import { defineCurrentErrors } from '../../redux/appSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { terminateControls } from '../../redux/appSlice';
 
-type CompileControls = () => {
-	isCritical: boolean;
-	currentErrors?: Record<string, Array<LunaticError>>;
-};
+function isOnError(errors?: Record<string, LunaticError[]>) {
+	return errors !== undefined && Object.values(errors).length > 0;
+}
 
-export function useControls(compileControls?: CompileControls) {
+/**
+ * Compile les controles et met à jour l'état applicatif selon leurs résultats.
+ * Les erreurs contiennent des composants React et ne peuvent donc ête directement
+ * stockés dans redux : ils sont conservés dans le hook et consommé directement dans les composants
+ * qui veulent les présenter.
+ * @returns
+ */
+export function useControls(): Record<string, Array<LunaticError>> | undefined {
+	const [controls, setControls] =
+		useState<Record<string, Array<LunaticError>>>();
+	const startControls = useAppSelector((s) => s.stromae.startControls);
+	const isOnWarning = useAppSelector((s) => s.stromae.isOnWarning);
 	const dispatch = useAppDispatch();
-	const isOnWarning = useRef(false);
+	const { compileControls } = useContext(LunaticContext);
 
-	const compileErrors = useCallback(() => {
-		if (typeof compileControls === 'function') {
-			if (isOnWarning.current) {
-				isOnWarning.current = false;
+	useEffect(() => {
+		if (startControls && compileControls) {
+			const { isCritical, currentErrors } = compileControls();
+			if (isOnWarning && !isCritical) {
+				// si on est déjà en warning mais qu'il n'y a pas d'erreur, on bypass les warning
 				dispatch(
-					defineCurrentErrors({ currentErrors: undefined, isCritical: false })
+					terminateControls({
+						isOnError: false,
+						isOnWarning: false,
+					})
 				);
-				return {
-					isCritical: false,
-					isOnWarning: false,
-				};
+				setControls(undefined);
 			} else {
-				const compiled = compileControls();
-				if (compiled.currentErrors) {
-					dispatch(defineCurrentErrors(compiled));
-
-					if (compiled.isCritical) {
-						isOnWarning.current = false;
-						return {
-							isCritical: true,
-							isOnWarning: false,
-						};
-					} else {
-						isOnWarning.current = true;
-						return {
-							isCritical: false,
-							isOnWarning: true,
-						};
-					}
-				}
+				dispatch(
+					terminateControls({
+						isOnError: isCritical,
+						isOnWarning: !isCritical && isOnError(currentErrors),
+					})
+				);
+				setControls(currentErrors);
 			}
 		}
-		return {
-			isCritical: undefined,
-			isOnWarning: undefined,
-		};
-	}, [compileControls, dispatch]);
+	}, [compileControls, controls, dispatch, isOnWarning, startControls]);
 
-	return compileErrors;
+	return controls;
 }

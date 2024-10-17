@@ -3,6 +3,8 @@ import { ComponentsRenderer } from '../ComponentsRenderer';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { useAppSelector } from '../../redux/store';
+import { LunaticError } from '../../typeLunatic/type-source';
+import { useControls } from '../orchestrator/useControls';
 
 const useStyles = makeStyles()({
 	root: {
@@ -14,7 +16,7 @@ const useStyles = makeStyles()({
 
 export function Modals() {
 	const { getComponents } = useContext(LunaticContext);
-	const currentErrors = useAppSelector((s) => s.stromae.currentErrors);
+	const currentErrors = useControls();
 	const disabled = useAppSelector((s) => s.stromae.onSaving);
 	const { classes, cx } = useStyles();
 

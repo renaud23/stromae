@@ -15,12 +15,12 @@ function isChanges(changes?: ChangeEvent) {
 
 function fillValues(
 	changes: ChangeEvent,
-	getData: (refreshCalculated: boolean) => VariablesType
+	getData?: (refreshCalculated: boolean) => VariablesType
 ) {
 	return Object.keys(changes).reduce(
 		(a, name) => ({
 			...a,
-			[name]: getData?.(false)?.COLLECTED[name]?.COLLECTED,
+			[name]: getData?.(false)?.COLLECTED[name]?.COLLECTED ?? null,
 		}),
 		{}
 	);
@@ -31,7 +31,6 @@ export function useSaving(
 ) {
 	const dispatch = useAppDispatch();
 	const unit = useAppSelector((state) => state.stromae.unit);
-	const collectStatus = useAppSelector((state) => state.stromae.collectStatus);
 
 	const save = useCallback(
 		async (currentChanges?: Record<string, unknown>) => {
@@ -50,16 +49,16 @@ export function useSaving(
 						dispatch(defineSavingFailure({ status: 500 }));
 					} else {
 						dispatch(defineSavingFailure({ status: 200 }));
-						if (collectStatus !== CollectStatusEnum.Completed) {
-							dispatch(defineCollectStatus(CollectStatusEnum.Completed));
-						}
+
+						dispatch(defineCollectStatus(CollectStatusEnum.Completed));
+
 						return true;
 					}
 				}
 			}
 			return false;
 		},
-		[unit, dispatch, getData, collectStatus]
+		[unit, dispatch, getData]
 	);
 
 	return save;
