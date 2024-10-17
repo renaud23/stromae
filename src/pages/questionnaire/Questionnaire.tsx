@@ -11,7 +11,6 @@ import { Modals } from '../../components/modals';
 import { Continuer } from '../../components/navigation/Continuer';
 import { Precedent } from '../../components/navigation/Precedent';
 import { AuthSecure } from '../../lib/oidc';
-import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { useOrchestrator } from '../../components/orchestrator/useOrchestrator';
 import { LunaticSource } from '../../typeLunatic/type-source';
 import { SurveyUnitData } from '../../typeStromae/type';
@@ -23,6 +22,7 @@ import { useStromaePage } from '../../hooks/useStromaePage';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { defineCollectStatus } from '../../redux/appSlice';
+import { useQuestionnaireTitle } from '../../components/orchestrator/useQuestionnaireTitle';
 
 export type QuestionnaireParams = {
 	survey?: string;
@@ -33,7 +33,7 @@ export function Questionnaire() {
 	useRedirectIfAlreadyValidated();
 	const { survey, unit } = useStromaePage();
 	const { source, data, metadata } = useGetSurveyAPI({ survey, unit });
-	useDocumentTitle('Questionnaire', metadata);
+	useQuestionnaireTitle('Questionnaire', metadata, source);
 	const collectStatus = data?.stateData.state;
 
 	const dispatch = useAppDispatch();

@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { LunaticSource } from '../../typeLunatic/type-source';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { objectHasKey } from '../../lib/commons/object';
+import { useAppSelector } from '../../redux/store';
+import { MetadataSurvey } from '../../typeStromae/type';
 
 function getTitleByPage(
 	source?: LunaticSource,
@@ -23,18 +25,19 @@ function getTitleByPage(
 /**
  * Set the page title according to the current sequence in the form
  */
-export function useQuestionnaireTitle({
-	source,
-	page,
-	defaultTitle,
-}: {
-	source?: LunaticSource;
-	page: string;
-	defaultTitle: string;
-}): void {
+export function useQuestionnaireTitle(
+	defaultTitle: string,
+	metadata?: MetadataSurvey,
+	source?: LunaticSource
+): void {
+	const page = useAppSelector((s) => s.stromae.pageTag);
 	const titleMap = useMemo(
 		() => getTitleByPage(source, defaultTitle),
 		[source, defaultTitle]
 	);
-	useDocumentTitle(objectHasKey(titleMap, page) ? titleMap[page] : undefined);
+
+	useDocumentTitle(
+		objectHasKey(titleMap, page) ? titleMap[page] : undefined,
+		metadata
+	);
 }

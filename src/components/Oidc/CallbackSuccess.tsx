@@ -1,9 +1,7 @@
 import { fr } from '@codegouvfr/react-dsfr';
-import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import Success from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/success.svg';
 
 export function CallbackSuccess() {
-	useDocumentTitle('Page de chargement vers le questionnaire');
 	return (
 		<div className={fr.cx('fr-container')} aria-live="polite" aria-busy="true">
 			<div
