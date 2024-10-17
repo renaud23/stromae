@@ -22,6 +22,13 @@ function parseDate(date?: number) {
 	return '';
 }
 
+const depositProofURI = (unit: string) =>
+	`${environment.DOMAIN}/api/survey-unit/${unit}/deposit-proof`;
+
+function fetchDepositProof(unit: string) {
+	return fetch(depositProofURI(unit)).then((r) => r.blob());
+}
+
 /*
  * Trouver une librairie plus sure.
  */
@@ -75,19 +82,10 @@ export function PostSubmitSurvey() {
 
 	const handleDepositProof = useCallback(async () => {
 		if (unit) {
-			const promise = dispatch(
-				surveyAPI.endpoints.getDeposititProof.initiate(unit, {
-					forceRefetch: true,
-				})
-			);
-			const { data } = await promise;
-
-			if (data) {
-				download(data, unit);
-			}
+			const deposit = await fetchDepositProof(unit);
+			download(deposit, unit);
 		}
-		return null;
-	}, [dispatch, unit]);
+	}, [unit]);
 
 	const submit = metadata?.Submit;
 	const DescriptionAdditional = submit?.DescriptionAdditional ?? null;
@@ -124,14 +122,10 @@ export function PostSubmitSurvey() {
 								Vos réponses ont été envoyées le {submissionDate}.&nbsp;
 								{DescriptionAdditional}
 							</p>
-							{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-							<a
-								onClick={handleDepositProof}
-								className={fr.cx('fr-btn')}
-								href="#"
-							>
+
+							<button onClick={handleDepositProof} className={fr.cx('fr-btn')}>
 								Télécharger l'accusé de réception
-							</a>
+							</button>
 						</div>
 						<div
 							className={fr.cx(
@@ -167,7 +161,7 @@ export function PostSubmitSurvey() {
 					</div>
 				</div>
 			</div>
-			{<AdditionalInformation submit={submit} />}
+			<AdditionalInformation submit={submit} />
 		</>
 	);
 }

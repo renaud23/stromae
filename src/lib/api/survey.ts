@@ -18,12 +18,6 @@ export const surveyAPI = createApi({
 		getMetadataSurvey: builder.query<MetadataSurvey, string>({
 			query: (survey) => `/api/questionnaire/${survey}/metadata`,
 		}),
-		getDeposititProof: builder.query<BlobPart, string>({
-			query: (unit) => ({
-				url: `/api/survey-unit/${unit}/deposit-proof`,
-				responseHandler: async (response) => response.blob(),
-			}),
-		}),
 		getNomenclature: builder.query<Record<string, unknown>, string>({
 			query: (nomenclature: string) => `/api/nomenclature/${nomenclature}`,
 		}),
