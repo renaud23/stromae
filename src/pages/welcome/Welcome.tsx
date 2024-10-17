@@ -11,7 +11,7 @@ import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
  * TODO filtrer sur DEFAULT_SURVEY
  */
 
-export function Portail() {
+export function Welcome() {
 	const navigate = useNavigate();
 	const { survey } = useStromaePage();
 	const { oidcUser } = useAuthUser();

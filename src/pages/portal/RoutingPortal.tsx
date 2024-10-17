@@ -6,7 +6,7 @@ const { DEFAULT_SURVEY, AUTH_TYPE, VISUALIZE_ENABLED } = environment;
 export const visualizeRoutingEnabled =
 	AUTH_TYPE === AuthTypeEnum.None && VISUALIZE_ENABLED;
 
-export function RoutingPortail() {
+export function RoutingPortal() {
 	const navigate = useNavigate();
 
 	useEffect(() => {

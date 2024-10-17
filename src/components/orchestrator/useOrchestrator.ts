@@ -10,7 +10,7 @@ import {
 	defineOnSaving,
 	turningPage,
 } from '../../redux/appSlice';
-import { useSaving } from './useSaving';
+import { useSaving } from './useSaving/useSaving';
 import { useSavingStateData } from './useSaving/useSavingStateDada';
 
 const FEATURES = ['VTL', 'MD'];
@@ -119,8 +119,6 @@ export function useOrchestrator({ source, data }: UseOrchestrator) {
 		getComponents,
 		goPreviousPage: handleGoPrevious,
 		goNextPage: handleGoNext,
-		isFirstPage,
-		isLastPage,
 		goToPage,
 		getData,
 		Provider,

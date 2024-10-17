@@ -3,16 +3,17 @@ import { AuthProvider } from './components/auth';
 import { Deconnexion } from './pages/deconnexion';
 import { RouteError } from './pages/error/Error';
 import { Optional } from './pages/optional';
-import { Portail, RoutingPortail } from './pages/portail';
 import { PostSubmit } from './pages/postSubmit';
 import { Questionnaire } from './pages/questionnaire';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import { Welcome } from './pages/welcome/Welcome';
+import { RoutingPortal } from './pages/portal/RoutingPortal';
 
 const router = createBrowserRouter([
 	{
 		path: '/questionnaire/:survey',
-		element: <Portail />,
+		element: <Welcome />,
 		errorElement: <RouteError />,
 	},
 	{
@@ -52,7 +53,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/',
-		element: <RoutingPortail />,
+		element: <RoutingPortal />,
 		errorElement: <RouteError />,
 	},
 ]);
