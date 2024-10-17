@@ -14,7 +14,6 @@ import { AuthSecure } from '../../lib/oidc';
 import { useOrchestrator } from '../../components/orchestrator/useOrchestrator';
 import { LunaticSource } from '../../typeLunatic/type-source';
 import { SurveyUnitData } from '../../typeStromae/type';
-import { Content } from '../../components/skeleton/Content';
 import { useRedirectIfAlreadyValidated } from '../../components/orchestrator/useRedirectIfAlreadyValidated';
 import { LunaticContext } from './lunaticContext';
 import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
@@ -23,6 +22,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { defineCollectStatus } from '../../redux/appSlice';
 import { useQuestionnaireTitle } from '../../components/orchestrator/useQuestionnaireTitle';
+import { Layout as LayoutSkeleton } from '../../components/skeleton/Layout';
 
 export type QuestionnaireParams = {
 	survey?: string;
@@ -46,7 +46,7 @@ export function Questionnaire() {
 	if (source && data) {
 		return <DisplayQuestionnaire source={source} data={data} />;
 	}
-	return <Content />;
+	return <LayoutSkeleton />;
 }
 
 function DisplayQuestionnaire({
