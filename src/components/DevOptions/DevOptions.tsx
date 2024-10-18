@@ -7,10 +7,12 @@ const { DEBUG } = environment;
 
 export function DevOptions() {
 	const { getData } = useContext(LunaticContext);
+
 	function handleClick() {
 		const variables = getData?.(true);
 		console.log({ variables });
 	}
+
 	if (DEBUG) {
 		return (
 			<div

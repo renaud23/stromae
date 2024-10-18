@@ -11,18 +11,18 @@ import { Modals } from '../../components/modals';
 import { Continuer } from '../../components/navigation/Continuer';
 import { Precedent } from '../../components/navigation/Precedent';
 import { AuthSecure } from '../../lib/oidc';
-import { useOrchestrator } from '../../components/orchestrator/useOrchestrator';
 import { LunaticSource } from '../../typeLunatic/type-source';
 import { SurveyUnitData } from '../../typeStromae/type';
-import { useRedirectIfAlreadyValidated } from '../../components/orchestrator/useRedirectIfAlreadyValidated';
 import { LunaticContext } from './lunaticContext';
 import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
 import { useStromaePage } from '../../hooks/useStromaePage';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { defineCollectStatus } from '../../redux/appSlice';
-import { useQuestionnaireTitle } from '../../components/orchestrator/useQuestionnaireTitle';
 import { Layout as LayoutSkeleton } from '../../components/skeleton/Layout';
+import { useRedirectIfAlreadyValidated } from '../../hooks/useRedirectIfAlreadyValidated';
+import { useQuestionnaireTitle } from '../../hooks/useQuestionnaireTitle';
+import { useOrchestrator } from '../../hooks/useOrchestrator/useOrchestrator';
 
 export type QuestionnaireParams = {
 	survey?: string;

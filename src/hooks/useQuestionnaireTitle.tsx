@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { LunaticSource } from '../../typeLunatic/type-source';
-import { useDocumentTitle } from '../../utils/useDocumentTitle';
-import { objectHasKey } from '../../lib/commons/object';
-import { useAppSelector } from '../../redux/store';
-import { MetadataSurvey } from '../../typeStromae/type';
+import { LunaticSource } from '../typeLunatic/type-source';
+import { MetadataSurvey } from '../typeStromae/type';
+import { useAppSelector } from '../redux/store';
+import { useDocumentTitle } from '../utils/useDocumentTitle';
+import { objectHasKey } from '../lib/commons/object';
 
 function getTitleByPage(
 	source?: LunaticSource,

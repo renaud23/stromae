@@ -3,8 +3,7 @@ import { ComponentsRenderer } from '../ComponentsRenderer';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
 import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { useAppSelector } from '../../redux/store';
-import { LunaticError } from '../../typeLunatic/type-source';
-import { useControls } from '../orchestrator/useControls';
+import { useControls } from '../../hooks/useOrchestrator/useControls';
 
 const useStyles = makeStyles()({
 	root: {

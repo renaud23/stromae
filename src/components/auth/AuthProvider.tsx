@@ -61,7 +61,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			</OidcProvider>
 		);
 	}
-	if (waitingForOidcConfiguration) return <Pending />;
+	if (waitingForOidcConfiguration) {
+		return <Pending />;
+	}
 
 	return <></>;
 }

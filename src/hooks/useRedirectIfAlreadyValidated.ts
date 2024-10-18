@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { CollectStatusEnum } from '../../typeStromae/type';
-import { uri404, uriPostEnvoi } from '../../lib/domainUri';
-import { useAppSelector } from '../../redux/store';
+import { useAppSelector } from '../redux/store';
+import { CollectStatusEnum } from '../typeStromae/type';
+import { uri404, uriPostEnvoi } from '../lib/domainUri';
 
 /**
  * If collectStatus === Validated redirect user

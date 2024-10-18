@@ -6,7 +6,7 @@ import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
 import { useAppSelector } from '../../redux/store';
 import { LunaticInterface } from '../../typeStromae/type';
 import { LunaticError } from '../../typeLunatic/type-source';
-import { useControls } from '../orchestrator/useControls';
+import { useControls } from '../../hooks/useOrchestrator/useControls';
 
 type Props = {
 	only?: string[];

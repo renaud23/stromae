@@ -6,10 +6,15 @@ import { UNINITIALIZE } from '../lib/api/survey';
 
 /**
  * Met sur State, les paramètres issus de l'url
- * @returns { survey: string; unit?: string; }
+ * @returns { survey?: string; unit?: string; }
  */
 export function useStromaePage() {
-	const { survey = UNINITIALIZE, unit = UNINITIALIZE, optional } = useParams();
+	const {
+		survey = UNINITIALIZE,
+		unit = UNINITIALIZE,
+		optional,
+		errorType,
+	} = useParams();
 
 	const dispatch = useAppDispatch();
 
@@ -21,5 +26,5 @@ export function useStromaePage() {
 		}
 	}, [dispatch, survey, unit]);
 
-	return { survey, unit, optional };
+	return { survey, unit, optional, errorType };
 }
