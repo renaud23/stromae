@@ -13,7 +13,7 @@ export function CallbackSuccess() {
 				style={{ minHeight: '80vh' }}
 			>
 				<div className={fr.cx('fr-col-md-6', 'fr-col-12', 'fr-col--middle')}>
-					<h1 className="">Authentification réussie.</h1>
+					<h1>Authentification réussie.</h1>
 					<p>Vous allez être redirigé vers le questionnaire.</p>
 				</div>
 				<div

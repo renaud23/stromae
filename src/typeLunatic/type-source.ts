@@ -85,15 +85,15 @@ export type Hierarchy = {
 };
 
 export type ComponentTypeBase = {
-	label: LabelType;
+	label?: LabelType;
 	declarations?: DeclarationType[];
-	conditionFilter: ConditionFilterType;
+	conditionFilter?: ConditionFilterType;
 	controls?: ControlType[];
 	id: string;
-	storeName: string;
-	bindingDependencies: string[];
-	hierarchy: Hierarchy;
-	missingResponse: ResponseType;
+	storeName?: string;
+	bindingDependencies?: string[];
+	hierarchy?: Hierarchy;
+	missingResponse?: ResponseType;
 	mandatory?: boolean;
 	page: string;
 	title?: string;

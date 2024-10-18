@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../../components/layout';
 import { WelcomeContainer } from '../../components/Welcome';
-import { useAuthUser } from '../../lib/oidc';
 import { useStromaePage } from '../../hooks/useStromaePage';
 import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
+import { useOidcUser } from '@axa-fr/react-oidc';
 
 /**
  * TODO filtrer sur DEFAULT_SURVEY
@@ -14,7 +14,7 @@ import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
 export function Welcome() {
 	const navigate = useNavigate();
 	const { survey } = useStromaePage();
-	const { oidcUser } = useAuthUser();
+	const { oidcUser } = useOidcUser();
 	const { metadata } = useGetSurveyAPI({ survey });
 	useDocumentTitle("Page d'accueil", metadata);
 

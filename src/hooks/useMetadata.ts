@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MetadataSurvey } from '../typeStromae/type';
 import { useAppDispatch, useAppSelector } from '../redux/store';
-import { surveyAPI } from '../lib/api/survey';
+import { surveyAPI, UNINITIALIZE } from '../lib/api/survey';
 
 /**
  *
@@ -12,7 +12,7 @@ export function useMetadata() {
 	const survey = useAppSelector((s) => s.stromae.survey);
 	const dispatch = useAppDispatch();
 	useEffect(() => {
-		if (survey) {
+		if (survey && survey !== UNINITIALIZE) {
 			const promise = dispatch(
 				surveyAPI.endpoints.getMetadataSurvey.initiate(survey)
 			);

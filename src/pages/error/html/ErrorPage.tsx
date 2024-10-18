@@ -1,13 +1,10 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import TechnicalError from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg';
-import {
-	isRouteErrorResponse,
-	useParams,
-	useRouteError,
-} from 'react-router-dom';
+import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import { useDocumentTitle } from '../../../utils/useDocumentTitle';
-import { useGetSurveyAPI } from '../../../lib/api/useGetSurveyUnitAPI';
+import { useMetadata } from '../../../hooks/useMetadata';
+import { useStromaePage } from '../../../hooks/useStromaePage';
 
 type ContentType = {
 	subtitle?: Record<string, string>;
@@ -59,8 +56,8 @@ export function ErrorPage({
 	code?: number;
 	errorType?: string;
 }) {
-	const { survey } = useParams();
-	const { metadata } = useGetSurveyAPI({ survey });
+	useStromaePage();
+	const metadata = useMetadata();
 
 	const content = metadata?.errorPage;
 	const error = useRouteError();

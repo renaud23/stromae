@@ -3,16 +3,14 @@ import {
 	OidcProvider,
 	TokenRenewMode,
 } from '@axa-fr/react-oidc';
-import { useRef, useState } from 'react';
-import { useAsyncEffect } from '../../hooks/useAsyncEffect';
-import { publicGetRequest } from '../../lib/commons/axios-utils';
-import { AuthTypeEnum, environment } from '../../utils/read-env-vars';
+import { useEffect, useState } from 'react';
 import { Authenticating } from '../Oidc/Authenticating';
 import { AuthenticatingError } from '../Oidc/AuthenticatingError';
 import { CallbackSuccess } from '../Oidc/CallbackSuccess';
 import { ServiceWorkerNotSupported } from '../Oidc/ServiceWorkerNotSupported';
 import { SessionLost } from '../Oidc/SessionLost';
 import { Layout as LayoutSkeleton } from '../skeleton/Layout';
+import { useGetOidcConfigurationQuery } from '../../lib/api/oidcAPI';
 
 function Pending() {
 	return <LayoutSkeleton />;
@@ -22,43 +20,32 @@ type AuthProviderProps = {
 	children: JSX.Element;
 };
 
-function fetchConfig(): Promise<OidcConfiguration> {
-	return publicGetRequest<OidcConfiguration>('/configuration.json');
-}
-
-const { AUTH_TYPE } = environment;
-const isOidcEnabled = AUTH_TYPE === AuthTypeEnum.Oidc;
-
 export function AuthProvider({ children }: AuthProviderProps) {
-	const alreadyLoad = useRef(false);
 	const [configuration, setConfiguration] = useState<
 		OidcConfiguration | undefined
-	>(undefined);
+	>();
 
-	const oidcProviderReady = isOidcEnabled && configuration;
-	const waitingForOidcConfiguration = isOidcEnabled && !configuration;
+	const { data: oidcConfiguration, isError } = useGetOidcConfigurationQuery();
 
-	useAsyncEffect(async () => {
-		if (alreadyLoad.current) {
-			return;
+	useEffect(() => {
+		if (oidcConfiguration) {
+			setConfiguration({
+				...oidcConfiguration,
+				redirect_uri: `${window.location.origin}/login`,
+				token_renew_mode: TokenRenewMode.access_token_invalid,
+				refresh_time_before_tokens_expiration_in_second: 40,
+				service_worker_relative_url: '/OidcServiceWorker.js',
+				service_worker_only: false,
+			});
 		}
-		alreadyLoad.current = true;
+	}, [oidcConfiguration]);
 
-		if (!isOidcEnabled) {
-			return;
-		}
+	const oidcProviderReady = configuration;
+	const waitingForOidcConfiguration = !configuration;
 
-		const conf = await fetchConfig();
-		setConfiguration({
-			...conf,
-			redirect_uri: `${window.location.origin}/login`,
-			token_renew_mode: TokenRenewMode.access_token_invalid,
-			refresh_time_before_tokens_expiration_in_second: 40,
-			service_worker_relative_url: '/OidcServiceWorker.js',
-			service_worker_only: false,
-		});
-	}, [alreadyLoad]);
-
+	if (isError) {
+		return <>Error could only occurs in development !</>;
+	}
 	if (oidcProviderReady) {
 		return (
 			<OidcProvider
@@ -75,5 +62,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		);
 	}
 	if (waitingForOidcConfiguration) return <Pending />;
-	return <>{children}</>;
+
+	return <></>;
 }

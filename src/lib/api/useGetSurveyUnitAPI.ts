@@ -5,7 +5,7 @@ import { LunaticSource } from '../../typeLunatic/type-source';
 import { useCallback, useEffect, useState } from 'react';
 import { uri404 } from '../domainUri';
 import { QueryActionCreatorResult } from '@reduxjs/toolkit/query';
-import { surveyAPI } from './survey';
+import { surveyAPI, UNINITIALIZE } from './survey';
 import { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type';
 
 function isUnauthorized(error: unknown) {
@@ -24,17 +24,21 @@ async function resolve<U>(
 	promise: QueryActionCreatorResult<any>,
 	redirectLogin: () => void,
 	redirect404: () => void
-): Promise<U> {
+): Promise<U | undefined> {
 	const { data, error } = await promise;
-
-	if (error) {
-		if (isUnauthorized(error)) {
-			redirectLogin();
-		} else {
-			redirect404();
+	try {
+		if (error) {
+			if (isUnauthorized(error)) {
+				redirectLogin();
+			} else {
+				redirect404();
+			}
 		}
+		return data as U;
+	} catch (e) {
+		redirect404();
+		return undefined;
 	}
-	return data as U;
 }
 
 export function useGetSurveyAPI({
@@ -60,7 +64,7 @@ export function useGetSurveyAPI({
 	}, [navigate]);
 
 	useEffect(() => {
-		if (survey) {
+		if (survey && survey !== UNINITIALIZE) {
 			const getMetadata = dispatch(
 				surveyAPI.endpoints.getMetadataSurvey.initiate(survey)
 			);
@@ -73,7 +77,7 @@ export function useGetSurveyAPI({
 	}, [dispatch, redirect404, redirectLogin, survey]);
 
 	useEffect(() => {
-		if (survey) {
+		if (survey && survey !== UNINITIALIZE) {
 			const getSurvey = dispatch(
 				surveyAPI.endpoints.getSurvey.initiate(survey)
 			);
@@ -86,7 +90,7 @@ export function useGetSurveyAPI({
 	}, [dispatch, redirect404, redirectLogin, survey]);
 
 	useEffect(() => {
-		if (unit) {
+		if (unit && survey !== UNINITIALIZE) {
 			const getSurveyUnit = dispatch(
 				surveyAPI.endpoints.getSurveyUnit.initiate(unit)
 			);
@@ -100,7 +104,7 @@ export function useGetSurveyAPI({
 				);
 			})();
 		}
-	}, [dispatch, redirect404, redirectLogin, unit]);
+	}, [dispatch, redirect404, redirectLogin, survey, unit]);
 
 	return { source, data, metadata };
 }
