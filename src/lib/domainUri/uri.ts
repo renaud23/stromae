@@ -65,3 +65,12 @@ export function uriPostEnvoi(survey?: string, unit?: string) {
 export function uriDeconnexion(survey: string, unit: string) {
 	return `/questionnaire/${survey}/unite-enquetee/${unit}/deconnexion`;
 }
+
+/**
+ *
+ * @param unit
+ * @returns
+ */
+export function uriParadata(unit: string) {
+	return `/survey-unit/${unit}/paradata`;
+}

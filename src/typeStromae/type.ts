@@ -148,6 +148,21 @@ export type AcceptedElements =
 
 export type OptionalPage = Array<AcceptedElements>;
 
+export type EventHandler = {
+	event: 'blur' | 'focus' | 'change' | 'click';
+};
+
+export type ParadataComponent = {
+	id: string;
+	events: Array<EventHandler['event']>;
+};
+
+export type ParadataType = {
+	isActive: boolean;
+	level: '1' | '2';
+	components: Array<ParadataComponent> | [];
+};
+
 export type MetadataSurvey = {
 	Header: HeaderType;
 	Footer: FooterType;
@@ -156,4 +171,5 @@ export type MetadataSurvey = {
 	errorPage: Record<string, string>;
 	refreshDataOnPages?: Array<string>;
 	Welcome: WelcomeType;
+	paradata: ParadataType;
 } & { optionalPages: Record<string, OptionalPage> };
