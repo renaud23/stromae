@@ -1,18 +1,15 @@
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import { environment } from '../../utils/read-env-vars';
-import { useContext } from 'react';
-import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
 
 const { DEBUG } = environment;
 
 export function DevOptions() {
-	const { getData } = useContext(LunaticContext);
-
+	const { getData } = useLunaticContext();
 	function handleClick() {
 		const variables = getData?.(true);
 		console.log({ variables });
 	}
-
 	if (DEBUG) {
 		return (
 			<div

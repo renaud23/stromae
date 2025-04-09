@@ -1,9 +1,10 @@
 import { Alert } from '@codegouvfr/react-dsfr/Alert';
+
 import { fr } from '@codegouvfr/react-dsfr/fr';
-import { useAppSelector } from '../../redux/store';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
 
 export function AlertesSaving() {
-	const savingFailure = useAppSelector((s) => s.stromae.savingFailure);
+	const { savingFailure } = useLunaticContext();
 	if (savingFailure) {
 		const { status } = savingFailure;
 		if (status === 500) {

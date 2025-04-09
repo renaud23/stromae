@@ -1,12 +1,13 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import SkipLinks from '@codegouvfr/react-dsfr/SkipLinks';
+import { FooterType } from '../footer/FooterType';
+import { HeaderType } from '../Header/HeaderType';
 import { Header } from '../Header';
 import { Footer } from '../footer/Footer';
+import { Layout as LayoutSkeleton } from '../skeleton/Layout';
 import { Main } from './Main';
-import { useAppSelector } from '../../redux/store';
-import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
-
-type LayoutProps = {};
+import { useParams } from 'react-router';
+import { useMetadata } from '../../hooks/useMetadata';
 
 const defaultLinks = [
 	{
@@ -15,21 +16,30 @@ const defaultLinks = [
 	},
 ];
 
-export function Layout({ children }: PropsWithChildren<LayoutProps>) {
-	const survey = useAppSelector((state) => state.stromae.survey);
-	const { metadata } = useGetSurveyAPI({ survey });
+export function Layout({ children }: PropsWithChildren) {
+	const { survey } = useParams();
+	const [header, setHeader] = useState<HeaderType | undefined>(undefined);
+	const [footer, setFooter] = useState<FooterType | undefined>(undefined);
 
-	if (metadata) {
-		const { Header: header, Footer: footer } = metadata;
-		return (
-			<>
-				<SkipLinks links={defaultLinks} />
-				<Header header={header} />
+	const metadata = useMetadata(survey);
 
-				<Main id="contenu">{children}</Main>
-				<Footer footer={footer} />
-			</>
-		);
+	useEffect(() => {
+		if (metadata?.Header && metadata?.Footer) {
+			setHeader(metadata.Header);
+			setFooter(metadata.Footer);
+		}
+	}, [metadata]);
+
+	if (!header || !footer) {
+		return <LayoutSkeleton />;
 	}
-	return null;
+
+	return (
+		<>
+			<SkipLinks links={defaultLinks} />
+			<Header header={header} />
+			<Main id="contenu">{children}</Main>
+			<Footer footer={footer} />
+		</>
+	);
 }

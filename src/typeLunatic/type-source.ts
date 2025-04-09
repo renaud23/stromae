@@ -84,19 +84,27 @@ export type Hierarchy = {
 	subSequence: SequenceDescription;
 };
 
+export type GoToPage = (page: { page: string; iteration?: number }) => void;
+
+// type GetComponentProps = () => {
+// 	errors: Record<string, LunaticError[]> | undefined;
+// 	disabled: boolean;
+// };
+
 export type ComponentTypeBase = {
-	label?: LabelType;
+	label: LabelType;
 	declarations?: DeclarationType[];
-	conditionFilter?: ConditionFilterType;
+	conditionFilter: ConditionFilterType;
 	controls?: ControlType[];
 	id: string;
-	storeName?: string;
-	bindingDependencies?: string[];
-	hierarchy?: Hierarchy;
-	missingResponse?: ResponseType;
+	storeName: string;
+	bindingDependencies: string[];
+	hierarchy: Hierarchy;
+	missingResponse: ResponseType;
 	mandatory?: boolean;
 	page: string;
 	title?: string;
+	executeExpression: (expression: string) => ReactNode;
 };
 export type ComponentType =
 	| (ComponentTypeBase & ComponentSequenceType)
@@ -327,9 +335,4 @@ export type LunaticError = Pick<
 	formula: string;
 	labelFormula: string;
 	errorMessage: ReactNode;
-};
-
-export type SurveyUnit = {
-	survey: string;
-	unit: string;
 };

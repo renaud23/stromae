@@ -1,7 +1,9 @@
 import { fr } from '@codegouvfr/react-dsfr';
+import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import Success from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/success.svg';
 
 export function CallbackSuccess() {
+	useDocumentTitle('Page de chargement vers le questionnaire');
 	return (
 		<div className={fr.cx('fr-container')} aria-live="polite" aria-busy="true">
 			<div
@@ -13,7 +15,7 @@ export function CallbackSuccess() {
 				style={{ minHeight: '80vh' }}
 			>
 				<div className={fr.cx('fr-col-md-6', 'fr-col-12', 'fr-col--middle')}>
-					<h1>Authentification réussie.</h1>
+					<h1 className="">Authentification réussie.</h1>
 					<p>Vous allez être redirigé vers le questionnaire.</p>
 				</div>
 				<div

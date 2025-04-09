@@ -1,7 +1,10 @@
 import { Skeleton } from '@mui/material';
+
+import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { fr } from '@codegouvfr/react-dsfr';
 
 export function Content() {
+	useDocumentTitle('Page de chargement');
 	return (
 		<div className={fr.cx('fr-container')} aria-live="polite" aria-busy="true">
 			<div

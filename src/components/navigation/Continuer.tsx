@@ -1,20 +1,17 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button } from '@codegouvfr/react-dsfr/Button';
+import { useNavigate, useParams } from 'react-router';
 import { isComponentsContainSequence } from '../../lib/commons/isComponentscontainSequence';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { CollectStatusEnum, LunaticInterface } from '../../typeStromae/type';
-import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
-import { surveyAPI } from '../../lib/api/survey';
-import { useNavigate } from 'react-router';
-import { uri404, uriPostEnvoi } from '../../lib/domainUri';
-import { defineCollectStatus } from '../../redux/appSlice';
+import { ComponentType } from '../../typeLunatic/type-source';
+import { CollectStatusEnum } from '../../typeStromae/type';
+import { uri404 } from '../../lib/domainUri';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
+import { surveyApi } from '../../lib/surveys';
 
-type GetComponents = Pick<LunaticInterface, 'getComponents'>;
-
-function getButtonTitle({ getComponents }: GetComponents) {
+function getButtonTitle(getComponents: () => Array<ComponentType>) {
 	if (getComponents) {
 		const components = getComponents();
-		return components?.reduce((acc, component) => {
+		return components.reduce((acc, component) => {
 			if (component.componentType === 'Sequence') {
 				return `Commencer la saise des questions concernant l'étape ${component.title}`;
 			}
@@ -25,7 +22,7 @@ function getButtonTitle({ getComponents }: GetComponents) {
 }
 
 function getStatus(
-	{ getComponents }: GetComponents,
+	getComponents: () => Array<ComponentType>,
 	isLastPage: boolean,
 	saving: boolean
 ) {
@@ -50,65 +47,69 @@ function getStatus(
  * @returns
  */
 export function Continuer() {
-	const onSaving = useAppSelector((s) => s.stromae.onSaving);
-	const currentPage = useAppSelector((s) => s.stromae.pageTag);
-	const survey = useAppSelector((s) => s.stromae.survey);
-	const unit = useAppSelector((s) => s.stromae.unit);
+	const { unit } = useParams();
 	const [saving, setSaving] = useState(false);
-	const isLastPage = useAppSelector((s) => s.stromae.isLastPage);
+
+	const {
+		waiting = false,
+		isLastPage,
+		pageTag,
+		getComponents,
+		goNextPage,
+	} = useLunaticContext();
+
 	const navigate = useNavigate();
-	const { getComponents, goNextPage } = useContext(LunaticContext);
-	const dispatch = useAppDispatch();
 
 	const buttonContent =
-		saving || onSaving
+		waiting || saving
 			? `Chargement`
-			: getStatus({ getComponents }, isLastPage ?? false, onSaving);
+			: getStatus(getComponents, isLastPage ?? false, saving);
 
 	const handleClick = useCallback(
-		async (event: React.MouseEvent) => {
+		(event: React.MouseEvent) => {
 			event.preventDefault();
-			if (isLastPage) {
+
+			if (isLastPage && unit) {
 				setSaving(true);
-				const promise = dispatch(
-					surveyAPI.endpoints.putStateData.initiate({
-						unit,
-						currentPage,
-						state: CollectStatusEnum.Validated,
-						date: new Date().getTime(),
+				surveyApi
+					.putSurveyUnitStateData(
+						{
+							currentPage: pageTag,
+							state: CollectStatusEnum.Validated,
+							date: new Date().getTime(),
+						},
+						unit
+					)
+					.then(() => {
+						navigate(0);
+						setSaving(false);
 					})
-				);
-				try {
-					await promise;
-					dispatch(defineCollectStatus(CollectStatusEnum.Validated));
-					navigate(uriPostEnvoi(survey, unit));
-				} catch (e) {
-					navigate(uri404());
-				} finally {
-					setSaving(false);
-				}
+					.catch(() => {
+						navigate(uri404());
+						setSaving(false);
+					});
 			}
 
 			window.scrollTo(0, 0);
 			document.getElementById('button-precedent')?.focus();
-			goNextPage?.();
+			goNextPage();
 		},
-		[dispatch, goNextPage, isLastPage, navigate, currentPage, survey, unit]
+		[goNextPage, isLastPage, navigate, pageTag, unit]
 	);
 
 	return (
 		<Button
 			priority="primary"
 			onClick={handleClick}
-			title={getButtonTitle({ getComponents })}
+			title={getButtonTitle(getComponents)}
 			nativeButtonProps={{
 				form: 'stromae-form',
 				type: 'submit',
-				'aria-disabled': onSaving,
+				'aria-disabled': waiting || saving,
 			}}
 			id="continue-button"
-			iconId={onSaving ? 'fr-icon-refresh-line' : undefined}
-			disabled={onSaving}
+			iconId={waiting || saving ? 'fr-icon-refresh-line' : undefined}
+			disabled={waiting || saving}
 		>
 			{buttonContent}
 		</Button>

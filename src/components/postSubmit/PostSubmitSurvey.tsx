@@ -1,17 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fr } from '@codegouvfr/react-dsfr';
 import { format } from 'date-fns';
 import { fr as localeFr } from 'date-fns/esm/locale';
 import { Skeleton } from '@mui/material';
 import Confirmation from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/success.svg';
-import { uri404 } from '../../lib/domainUri';
-import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { surveyAPI } from '../../lib/api/survey';
-import { environment } from '../../utils/read-env-vars';
 import AdditionalInformation from './AdditionalInformation';
-import { CollectStatusEnum } from '../../typeStromae/type';
+import { uri404 } from '../../lib/domainUri';
+import { environment } from '../../utils/read-env-vars';
+import { surveyApi } from '../../lib/surveys';
+import { useMetadata } from '../../hooks/useMetadata';
+import { useSurveyUnitData } from '../../hooks/useSurveyUnitData';
 
 const { DEPOSIT_PROOF_FILE_NAME } = environment;
 
@@ -20,13 +19,6 @@ function parseDate(date?: number) {
 		return format(new Date(date), 'EEEE d LLLL, à HH:mm', { locale: localeFr });
 	}
 	return '';
-}
-
-const depositProofURI = (unit: string) =>
-	`${environment.DOMAIN}/api/survey-unit/${unit}/deposit-proof`;
-
-function fetchDepositProof(unit: string) {
-	return fetch(depositProofURI(unit)).then((r) => r.blob());
 }
 
 /*
@@ -42,52 +34,23 @@ function download(data: BlobPart, unit: string) {
 
 export function PostSubmitSurvey() {
 	const navigate = useNavigate();
-	const unit = useAppSelector((s) => s.stromae.unit);
-	const survey = useAppSelector((s) => s.stromae.survey);
-	const [submissionDate, setSubmissionDate] = useState('');
-	const { metadata, data } = useGetSurveyAPI({ survey, unit });
+	const { unit, survey } = useParams();
 
-	const dispatch = useAppDispatch();
-	const collectStatus = useAppSelector((s) => s.stromae.collectStatus);
-
-	/**
-	 * l'utilisateur arrive directement sur postenvoi, mais il n'a pas validé son questionnaire !
-	 */
-	useEffect(() => {
-		if (
-			!collectStatus &&
-			data?.stateData.state !== CollectStatusEnum.Validated
-		) {
-			navigate('/');
-		}
-	}, [collectStatus, data, navigate]);
-
-	useEffect(() => {
-		if (unit) {
-			(async () => {
-				/* force refetch pour être sur de présenter la bonne heure de validation */
-				const promise = dispatch(
-					surveyAPI.endpoints.getSurveyUnit.initiate(unit)
-				);
-				const { data, isError } = await promise;
-				if (isError) {
-					navigate(uri404());
-				}
-				if (data) {
-					setSubmissionDate(parseDate(data?.stateData?.date));
-				}
-			})();
-		}
-	}, [dispatch, navigate, unit]);
+	function navigateError() {
+		navigate(uri404());
+	}
 
 	const handleDepositProof = useCallback(async () => {
 		if (unit) {
-			const deposit = await fetchDepositProof(unit);
-			download(deposit, unit);
+			download(await surveyApi.getDepositiProof(unit), unit);
 		}
+		return null;
 	}, [unit]);
 
+	const metadata = useMetadata(survey, navigateError);
+	const surveyUnitData = useSurveyUnitData(unit, navigateError);
 	const submit = metadata?.Submit;
+	const submissionDate = parseDate(surveyUnitData?.stateData?.date);
 	const DescriptionAdditional = submit?.DescriptionAdditional ?? null;
 
 	if (!metadata) {
@@ -122,10 +85,14 @@ export function PostSubmitSurvey() {
 								Vos réponses ont été envoyées le {submissionDate}.&nbsp;
 								{DescriptionAdditional}
 							</p>
-
-							<button onClick={handleDepositProof} className={fr.cx('fr-btn')}>
+							{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+							<a
+								onClick={handleDepositProof}
+								className={fr.cx('fr-btn')}
+								href="#"
+							>
 								Télécharger l'accusé de réception
-							</button>
+							</a>
 						</div>
 						<div
 							className={fr.cx(

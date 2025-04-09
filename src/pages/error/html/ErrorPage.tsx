@@ -1,10 +1,15 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import TechnicalError from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg';
-import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
+
+import {
+	isRouteErrorResponse,
+	useParams,
+	useRouteError,
+} from 'react-router-dom';
+
 import { useDocumentTitle } from '../../../utils/useDocumentTitle';
 import { useMetadata } from '../../../hooks/useMetadata';
-import { useStromaePage } from '../../../hooks/useStromaePage';
 
 type ContentType = {
 	subtitle?: Record<string, string>;
@@ -56,16 +61,17 @@ export function ErrorPage({
 	code?: number;
 	errorType?: string;
 }) {
-	useStromaePage();
-	const metadata = useMetadata();
+	const { survey } = useParams();
+	const metadata = useMetadata(survey);
 
 	const content = metadata?.errorPage;
+
 	const error = useRouteError();
 	const errorStatus = isRouteErrorResponse(error) && error.status;
+
 	const { title, subtitle, paragraph } = getTextFor(code, content, errorType);
 
 	useDocumentTitle(title);
-
 	return (
 		<div className={fr.cx('fr-container')}>
 			<div

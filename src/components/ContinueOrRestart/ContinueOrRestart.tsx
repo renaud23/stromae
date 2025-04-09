@@ -1,17 +1,17 @@
-import { useState, useCallback, useContext, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ModalContinueOrRestart } from './ModalContinueOrRestart';
-import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
-import { useAppSelector } from '../../redux/store';
-import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
 
 export function ContinueOrRestart() {
-	const { goToPage } = useContext(LunaticContext);
-	const unit = useAppSelector((s) => s.stromae.unit);
-
-	const { data } = useGetSurveyAPI({ unit });
-	const pageFromAPI = data?.stateData.currentPage;
-
+	const { goToPage, initialData } = useLunaticContext();
+	const pageFromAPI = initialData?.stateData.currentPage;
 	const [display, setDisplay] = useState(false);
+
+	useEffect(() => {
+		if (pageFromAPI && pageFromAPI !== '1') {
+			setDisplay(true);
+		}
+	}, [pageFromAPI]);
 
 	function onClose() {
 		setDisplay(false);
@@ -30,20 +30,14 @@ export function ContinueOrRestart() {
 		setDisplay(false);
 	}, [goToPage]);
 
-	useEffect(() => {
-		if (pageFromAPI && pageFromAPI !== '1') {
-			setDisplay(true);
-		}
-	}, [pageFromAPI]);
-
-	if (display) {
-		return (
-			<ModalContinueOrRestart
-				onContinue={onContinue}
-				onRestart={onRestart}
-				onClose={onClose}
-			/>
-		);
+	if (!display) {
+		return null;
 	}
-	return null;
+	return (
+		<ModalContinueOrRestart
+			onContinue={onContinue}
+			onRestart={onRestart}
+			onClose={onClose}
+		/>
+	);
 }

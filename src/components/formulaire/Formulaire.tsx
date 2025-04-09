@@ -1,7 +1,7 @@
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
 import { ComponentsRenderer } from '../ComponentsRenderer';
 import { Form } from '../skeleton/Form';
-import { useAppSelector } from '../../redux/store';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
 
 const useStyles = makeStyles()({
 	root: {
@@ -75,18 +75,31 @@ const useStyles = makeStyles()({
 });
 
 export function Formulaire() {
-	const onSaving = useAppSelector((s) => s.stromae.onSaving);
-	const pageTag = useAppSelector((s) => s.stromae.pageTag);
+	const {
+		waiting,
+		isLastPage,
+		pageTag,
+		getComponents,
+		goToPage,
+		goNextPage,
+		currentErrors,
+		disabled,
+	} = useLunaticContext();
 
 	const { classes, cx } = useStyles();
-	if (onSaving) {
+	if (waiting && !isLastPage) {
 		return <Form />;
 	}
 	return (
 		<form id="stromae-form" className={cx(classes.root)}>
 			<ComponentsRenderer
 				focusKey={pageTag}
-				except={['QuestionExplication', 'ConfirmationModal']}
+				getComponents={getComponents}
+				goToPage={goToPage}
+				goNextPage={goNextPage}
+				currentErrors={currentErrors}
+				disabled={disabled}
+				except={['QuestionExplication']}
 			/>
 		</form>
 	);

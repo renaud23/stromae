@@ -1,28 +1,17 @@
-import { useEffect, useState } from 'react';
-import { MetadataSurvey } from '../typeStromae/type';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { surveyAPI, UNINITIALIZE } from '../lib/api/survey';
+import { useCallback } from 'react';
+import { surveyApi } from '../lib/surveys/surveysApi';
 
-/**
- *
- * @returns
- */
-export function useMetadata() {
-	const [metadata, setMetadata] = useState<MetadataSurvey>();
-	const survey = useAppSelector((s) => s.stromae.survey);
-	const dispatch = useAppDispatch();
-	useEffect(() => {
-		if (survey && survey !== UNINITIALIZE) {
-			const promise = dispatch(
-				surveyAPI.endpoints.getMetadataSurvey.initiate(survey)
-			);
+import { useRemote } from '../components/orchestrator/useRemote';
 
-			(async () => {
-				const { data } = await promise;
-				setMetadata(data);
-			})();
+export function useMetadata(survey?: string, onError = () => {}) {
+	const getMetadata = useCallback(async () => {
+		if (survey) {
+			return surveyApi.getMetadataSurvey(survey);
 		}
-	}, [dispatch, survey]);
+		return undefined;
+	}, [survey]);
+
+	const metadata = useRemote(getMetadata, onError);
 
 	return metadata;
 }

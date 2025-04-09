@@ -1,22 +1,20 @@
-import { useRef, useEffect, useContext } from 'react';
+import { useRef, useEffect } from 'react';
 import Button from '@codegouvfr/react-dsfr/Button';
 import { usePrevious } from '../../lib/commons/usePrevious';
 import { fr } from '@codegouvfr/react-dsfr';
-import { useAppSelector } from '../../redux/store';
-import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
 
 export function Precedent() {
-	const pageTag = useAppSelector((s) => s.stromae.pageTag);
-	const isFirstPage = useAppSelector((s) => s.stromae.isFirstPage);
-	const { getComponents, goPreviousPage } = useContext(LunaticContext);
+	const { goPreviousPage, isFirstPage, pageTag, getComponents } =
+		useLunaticContext();
 
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const previousPage = usePrevious<string>(pageTag);
 
 	useEffect(() => {
 		if (pageTag !== previousPage) {
-			const components = getComponents?.();
-			const hasConfirmationModal = components?.some(
+			const components = getComponents();
+			const hasConfirmationModal = components.some(
 				(component) => component.componentType === 'ConfirmationModal'
 			);
 			if (hasConfirmationModal) {
@@ -43,7 +41,7 @@ export function Precedent() {
 	}, [pageTag, previousPage, getComponents]);
 
 	function handleClick() {
-		goPreviousPage?.();
+		goPreviousPage();
 	}
 
 	if (!isFirstPage) {
@@ -64,5 +62,6 @@ export function Precedent() {
 			</div>
 		);
 	}
+
 	return null;
 }

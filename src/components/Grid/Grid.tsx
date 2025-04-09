@@ -14,8 +14,7 @@ const useStyles = makeStyles()({
 	},
 });
 
-export function Grid(props: PropsWithChildren) {
-	const { children } = props;
+export function Grid({ children }: PropsWithChildren) {
 	const { classes, cx } = useStyles();
 	return (
 		<div className={cx(fr.cx('fr-col-12'), classes.container)}>

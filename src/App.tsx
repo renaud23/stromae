@@ -3,22 +3,25 @@ import { AuthProvider } from './components/auth';
 import { Deconnexion } from './pages/deconnexion';
 import { RouteError } from './pages/error/Error';
 import { Optional } from './pages/optional';
+import { Portail, RoutingPortail } from './pages/portail';
 import { PostSubmit } from './pages/postSubmit';
 import { Questionnaire } from './pages/questionnaire';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
-import { Welcome } from './pages/welcome/Welcome';
-import { RoutingPortal } from './pages/portal/RoutingPortal';
+import { Welcome } from './pages/welcome';
 
 const router = createBrowserRouter([
 	{
 		path: '/questionnaire/:survey',
-		element: <Welcome />,
+		element: <Portail />,
 		errorElement: <RouteError />,
 	},
 	{
 		path: '/questionnaire/:survey/unite-enquetee/:unit/post-envoi',
 		element: <PostSubmit />,
+		errorElement: <RouteError />,
+	},
+	{
+		path: '/questionnaire/:survey/unite-enquetee/:unit/accueil',
+		element: <Welcome />,
 		errorElement: <RouteError />,
 	},
 	{
@@ -28,11 +31,6 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/questionnaire/:survey/unite-enquetee/:unit',
-		element: <Questionnaire />,
-		errorElement: <RouteError />,
-	},
-	{
-		path: '/questionnaire/:survey/unite-enquetee/:unit/page/:page',
 		element: <Questionnaire />,
 		errorElement: <RouteError />,
 	},
@@ -58,17 +56,15 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/',
-		element: <RoutingPortal />,
+		element: <RoutingPortail />,
 		errorElement: <RouteError />,
 	},
 ]);
 
 export function App() {
 	return (
-		<Provider store={store}>
-			<AuthProvider>
-				<RouterProvider router={router} />
-			</AuthProvider>
-		</Provider>
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
 	);
 }

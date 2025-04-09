@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import { ComponentsRenderer } from '../ComponentsRenderer';
 import { makeStyles } from '@codegouvfr/react-dsfr/tss';
-import { LunaticContext } from '../../pages/questionnaire/lunaticContext';
+import { useLunaticContext } from '../orchestrator/useLunaticContext';
 
 const useStyles = makeStyles()({
 	root: {
@@ -12,19 +11,26 @@ const useStyles = makeStyles()({
 	},
 });
 
-const only = ['QuestionExplication'];
-
 /**
  * Components displayed at the bottom of the page
  * For instance QuestionExplication to show more detail about a question
  */
 export function ComplementaryComponents() {
+	const {
+		getComponents,
+		currentErrors,
+		disabled = false,
+	} = useLunaticContext();
 	const { classes, cx } = useStyles();
-	const { getComponents } = useContext(LunaticContext);
+	const only = ['QuestionExplication'];
 
-	const components = getComponents?.({ only });
+	if (!getComponents) {
+		return null;
+	}
 
-	if (components?.length === 0) {
+	const components = getComponents({ only });
+
+	if (components.length === 0) {
 		return null;
 	}
 
@@ -33,7 +39,12 @@ export function ComplementaryComponents() {
 			id="complementary-components"
 			className={cx(classes.root, 'fr-col-12')}
 		>
-			<ComponentsRenderer only={only} />
+			<ComponentsRenderer
+				getComponents={getComponents}
+				currentErrors={currentErrors}
+				disabled={disabled}
+				only={only}
+			/>
 		</div>
 	);
 }

@@ -41,5 +41,4 @@ export const environment = {
 	DEBUG: Boolean(getEnvVar('REACT_APP_DEBUG') === 'true'),
 	DEPOSIT_PROOF_FILE_NAME:
 		getEnvVar('REACT_APP_DEPOSIT_PROOF_FILE_NAME') || 'deposit-proof',
-	PARADATA_DOMAIN: getEnvVar('REACT_APP_PARADATA_DOMAIN') || '',
 };

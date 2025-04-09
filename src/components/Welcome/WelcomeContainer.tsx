@@ -1,26 +1,28 @@
 import { Button } from '@codegouvfr/react-dsfr/Button';
 import { Skeleton } from '@mui/material';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fr } from '@codegouvfr/react-dsfr';
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
-import { useAuth, useAuthUser } from '../../lib/oidc';
+import { useAuthUser } from '../../lib/oidc';
 import ConvertContent from '../../utils/convertContent';
 import { themeStringToVariable } from '../../utils/themeStringToVariable';
+import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import { RespondantsList } from './RespondantsList';
 import { WelcomeQuestions } from './WelcomeQuestions';
-import { useAppSelector } from '../../redux/store';
-import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
+import { useOidc } from '@axa-fr/react-oidc';
+import { useMetadata } from '../../hooks/useMetadata';
 
 export function WelcomeContainer() {
 	const theme = useColors();
 	const navigate = useNavigate();
-	const unit = useAppSelector((s) => s.stromae.unit);
+	const { survey, unit } = useParams();
 	const { oidcUser } = useAuthUser();
-	const { login } = useAuth();
+	const { login } = useOidc();
 
-	const survey = useAppSelector((state) => state.stromae.survey);
-	const { metadata } = useGetSurveyAPI({ survey });
+	const metadata = useMetadata(survey);
+	const welcome = metadata?.Welcome;
+	useDocumentTitle("Page d'accueil");
 
 	const onClick = useCallback(() => {
 		if (oidcUser && survey && unit) {
@@ -33,8 +35,6 @@ export function WelcomeContainer() {
 	if (!metadata) {
 		return <Skeleton />;
 	}
-
-	const welcome = metadata.Welcome;
 	return (
 		<div>
 			<div

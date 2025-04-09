@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactElement } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { uri404 } from '../../lib/domainUri';
+
 import {
 	OptionalPageElementsEnum,
 	AcceptedElements,
@@ -10,8 +11,7 @@ import { Title } from './elements/Title';
 import { List } from './elements/List';
 import { Section } from './elements/Section';
 import { fr } from '@codegouvfr/react-dsfr';
-import { useGetSurveyAPI } from '../../lib/api/useGetSurveyUnitAPI';
-import { useAppSelector } from '../../redux/store';
+import { useMetadata } from '../../hooks/useMetadata';
 
 export function createPageElement(element: AcceptedElements, altId: string) {
 	const { type, id } = element;
@@ -42,9 +42,9 @@ function createContent(
 }
 
 export function OptionalPage({ name }: { name?: string }) {
-	const survey = useAppSelector((s) => s.stromae.survey);
+	const { survey } = useParams();
 	const [content, setContent] = useState<Array<AcceptedElements>>([]);
-	const { metadata } = useGetSurveyAPI({ survey });
+	const metadata = useMetadata(survey);
 	const navigate = useNavigate();
 
 	useEffect(() => {

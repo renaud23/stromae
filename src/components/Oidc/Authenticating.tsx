@@ -1,7 +1,9 @@
 import { fr } from '@codegouvfr/react-dsfr';
+import { useDocumentTitle } from '../../utils/useDocumentTitle';
 import System from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/system.svg';
 
 export function Authenticating() {
+	useDocumentTitle('Page de chargement vers la page de connexion');
 	return (
 		<div className={fr.cx('fr-container')} aria-live="polite" aria-busy="true">
 			<div

@@ -42,10 +42,6 @@ export function uriSurvey(survey: string) {
 	return `/questionnaire/${survey}`;
 }
 
-export function uriMetadataSurvey(survey: string) {
-	return `/questionnaire/${survey}/metadata`;
-}
-
 /*
  * ressource invoquée par l'utilisateur pour finaliser le questionnaire.
  */
@@ -64,13 +60,4 @@ export function uriPostEnvoi(survey?: string, unit?: string) {
  */
 export function uriDeconnexion(survey: string, unit: string) {
 	return `/questionnaire/${survey}/unite-enquetee/${unit}/deconnexion`;
-}
-
-/**
- *
- * @param unit
- * @returns
- */
-export function uriParadata(unit: string) {
-	return `/survey-unit/${unit}/paradata`;
 }
