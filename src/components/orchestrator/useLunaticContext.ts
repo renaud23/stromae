@@ -1,9 +1,12 @@
 import { useLunatic } from '@inseefr/lunatic';
 import { createContext, useContext } from 'react';
 import { ComponentType, LunaticError } from '../../typeLunatic/type-source';
-import { SavingFailure, SurveyUnitData } from '../../typeStromae/type';
+import {
+	PersonalizationElement,
+	SavingFailure,
+	SurveyUnitData,
+} from '../../typeStromae/type';
 import { SurveyChange } from './Orchestrator';
-import { PersonalizationMap } from './useOrchestrator';
 
 export type UseLunaticContext = ReturnType<typeof useLunatic>;
 
@@ -24,7 +27,7 @@ type UseLunaticInterface = {
 	initialData?: SurveyUnitData;
 	currentChange: SurveyChange;
 	savingFailure: SavingFailure;
-	personalization: PersonalizationMap;
+	personalization?: PersonalizationElement[];
 	getData: (arg?: boolean) => Record<string, unknown>;
 	criticality?: boolean;
 };
@@ -37,8 +40,8 @@ const LunaticContextInitial: UseLunaticContext = {
 	pageTag: undefined,
 	initialData: undefined,
 	savingFailure: undefined,
-	personalization: undefined,
 	criticality: undefined,
+	personalization: undefined,
 };
 
 export const lunaticContext = createContext(LunaticContextInitial);

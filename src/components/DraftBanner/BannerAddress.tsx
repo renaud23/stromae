@@ -1,14 +1,15 @@
 import { fr } from '@codegouvfr/react-dsfr/fr';
+import { useBannerLabel } from './useBannerLabel';
 
-type Props = {
-	label?: string | number | boolean;
-};
+export function BannerAddress() {
+	const bannerLabel = useBannerLabel();
 
-export function BannerAddress(props: Props) {
-	const { label } = props;
-
-	if (!label) {
+	if (!bannerLabel) {
 		return null;
 	}
-	return <p className={fr.cx('fr-text--bold', 'fr-mr-2w', 'fr-mb-0')}>{label}</p>;
+	return (
+		<p className={fr.cx('fr-text--bold', 'fr-mr-2w', 'fr-mb-0')}>
+			{bannerLabel}
+		</p>
+	);
 }

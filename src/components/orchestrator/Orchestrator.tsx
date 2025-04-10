@@ -90,6 +90,7 @@ export function OrchestratorReady({
 					savingFailure,
 					getData,
 					criticality,
+					personalization: initialData?.personalization,
 				}}
 			>
 				{children}

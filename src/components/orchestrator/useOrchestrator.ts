@@ -54,7 +54,6 @@ export function useOrchestrator(params: useOrchestratorParams) {
 	const {
 		source,
 		surveyUnitData,
-
 		preferences,
 		features,
 		savingType,
@@ -67,7 +66,6 @@ export function useOrchestrator(params: useOrchestratorParams) {
 
 	const [waiting, setWaiting] = useState(false);
 	const [failure, setFailure] = useState<SavingFailure>();
-
 	const { data, stateData, personalization = [] } = surveyUnitData ?? {};
 	const [currentChange, setCurrentChange] = useState<SurveyChange>();
 	const personalizationMap = useMemo<
