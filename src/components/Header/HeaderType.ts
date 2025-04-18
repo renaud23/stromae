@@ -1,10 +1,13 @@
-import { HeaderProps } from '@codegouvfr/react-dsfr/Header';
+import type { ButtonProps } from '@codegouvfr/react-dsfr/Button'
+import type { HeaderProps } from '@codegouvfr/react-dsfr/Header'
 
-export type HeaderType = HeaderProps & {};
+import type { LinkProps } from '../footer/FooterType'
+
+export type HeaderType = HeaderProps & {}
 
 export type QuickAccessItems = {
-	buttonProps: any;
-	iconId: any;
-	linkProps: any;
-	text: any;
-};
+  buttonProps: ButtonProps
+  iconId: string
+  linkProps: LinkProps
+  text: string
+}

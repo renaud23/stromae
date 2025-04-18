@@ -1,14 +1,14 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from "react";
 
 type LunaticComponentContainerProps = PropsWithChildren<{ id: string }>;
 
 export function LunaticComponentContainer({
-	children,
-	id,
+  children,
+  id,
 }: LunaticComponentContainerProps) {
-	return (
-		<div className="lunatic-component-with-dsfr" id={`lunatic-component-${id}`}>
-			{children}
-		</div>
-	);
+  return (
+    <div className="lunatic-component-with-dsfr" id={`lunatic-component-${id}`}>
+      {children}
+    </div>
+  );
 }

@@ -1,10 +1,10 @@
-import { FooterJsonProps } from './FooterType';
+import { type FooterJsonProps } from './FooterType'
 
 export const DEFAULT_FOOTER: FooterJsonProps = {
-	brandTop: {
-		value: 'République<br />française',
-		type: 'html',
-	},
-	accessibility: 'fully compliant',
-	homeLinkProps: { title: '', to: '#' },
-};
+  brandTop: {
+    value: 'République<br />française',
+    type: 'html',
+  },
+  accessibility: 'fully compliant',
+  homeLinkProps: { title: '', to: '#' },
+}

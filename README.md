@@ -1,55 +1,54 @@
-# Stromae V3
+# React + TypeScript + Vite
 
-Web application for the management of questionnaires powered by Lunatic (https://github.com/InseeFr/Lunatic)
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-[**Documentation de Stromae**](https://inseefr.github.io/Stromae/)
+Currently, two official plugins are available:
 
-## View a survey
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-You can view a questionnaire in stromae by going to `https://url-of-application/visualize`.
+## Expanding the ESLint configuration
 
-Then you just have to add the survey url, metadata url (not mandatory), data url (not mandatory) and nomenclatures urls.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-Nomenclatures are not mandatory too, they are used by suggester component to allow autocompletion on large lists.
-
-You must add nomenclature as follow :
-
-```json
-{
-"idNomenclature1":"https://url_of_the_nomenclature1.json",
-"idNomenclature2":"https://url_of_the_nomenclature2.json",
-...
-}
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
 ```
 
-with "idNomenclature1" is the nomenclature id given in the survey for suggester component.
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-## Style
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-We use the [French design system](https://www.systeme-de-design.gouv.fr)
-
-## Docker
-
-You can use Docker image to run StromaeV3.
-
-- `docker run -p 80:80 -t inseefr/stromae:3.0.0-rc.1`
-
-## Generic Pages, optional pages and components overload
-
-There is 3 generic pages :
-
-- The welcome page
-- The validation page
-- The post submit page
-
-You can add also specify additional optional page in the `metadata.json`.
-
-There is 2 generic components :
-
-- The Header
-- The Footer
-
-Thanks the `metadata.json`, you can customize these pages and components.
-You must follow the [rules](https://www.systeme-de-design.gouv.fr/elements-d-interface/) of the French design system when you customize those components.
-
-These pages can be written in [VTL](https://github.com/InseeFr/Trevas-JS) x [Markdown](https://fr.wikipedia.org/wiki/Markdown).
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```
