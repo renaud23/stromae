@@ -1,7 +1,7 @@
 import { AlertesSaving } from '../../components/AlertSaving/AlertesSaving'
 import { AlertesControles } from '../../components/AlertesControles'
 import { ComplementaryComponents } from '../../components/ComplementaryComponents/ComplementaryComponents'
-import { ContinueOrRestart } from '../../components/ContinueOrRestart/ContinueOrRestart'
+import { ContinueOrRestartModal } from '../../components/ContinueOrRestartModal/ContinueOrRestartModal'
 import { DevOptions } from '../../components/DevOptions'
 import { DraftBanner } from '../../components/DraftBanner/DraftBanner'
 import { Grid } from '../../components/Grid/Grid'
@@ -29,7 +29,7 @@ export function Questionnaire() {
       <Layout>
         <Orchestrator features={FEATURES} savingType={COLLECTED}>
           <DraftBanner />
-          <ContinueOrRestart />
+          <ContinueOrRestartModal />
           <Precedent />
           <Grid>
             <AlertesSaving />

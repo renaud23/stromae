@@ -1,20 +1,20 @@
 import { type PropsWithChildren } from 'react'
 
+import type { LunaticSource } from '@inseefr/lunatic'
 import { useParams } from 'react-router'
 
 import { surveyApi } from '../../lib/surveys'
-import { type LunaticSource } from '../../typeLunatic/type-source'
 import type { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type'
 import { useControls } from './useControls'
-import { lunaticContext } from './useLunaticContext'
+import { type UseLunaticType, lunaticContext } from './useLunaticContext'
 import { useOrchestrator } from './useOrchestrator'
 import { useRemoteSurveyJson } from './useRemoteSurveyJson'
 
 export type OrchestratorProps = {
-  source?: LunaticSource
-  surveyUnitData?: SurveyUnitData
-  suggesterFetcher?: any
-  onChange?: (...args: any) => void
+  // source: LunaticSource
+  // surveyUnitData: SurveyUnitData
+
+  onChange?: UseLunaticType['onChange']
   getReferentiel?: (name: string) => Promise<Array<unknown>>
   activeControls?: boolean
   autoSuggesterLoading?: boolean
@@ -24,6 +24,7 @@ export type OrchestratorProps = {
   paginated?: boolean
   disabled?: boolean
   metadata?: MetadataSurvey
+  unit: string
 }
 
 export type SurveyChange = { name: string; value?: unknown }
@@ -37,7 +38,7 @@ export function OrchestratorReady({
   disabled,
   unit,
 }: PropsWithChildren<
-  OrchestratorProps & { source: LunaticSource; unit: string }
+  OrchestratorProps & { source: LunaticSource; surveyUnitData: SurveyUnitData }
 >) {
   const initialData = surveyUnitData
 

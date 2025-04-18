@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import { type GoToPage } from '../../typeLunatic/type-source'
-import { ModalDsfr } from '../ContinueOrRestart/ModalDsfr'
+import { ModalDsfr } from '../ContinueOrRestartModal/ModalDsfr'
 
 export function ConfirmationModal(props: { goToPage?: GoToPage }) {
   const { goToPage } = props

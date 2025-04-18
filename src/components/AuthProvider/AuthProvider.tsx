@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { type PropsWithChildren, useRef, useState } from 'react'
 
 import {
   type OidcConfiguration,
@@ -25,10 +25,6 @@ function Pending() {
   return <LayoutSkeleton />
 }
 
-type AuthProviderProps = {
-  children: JSX.Element
-}
-
 function fetchConfig(): Promise<OidcConfiguration> {
   return publicGetRequest<OidcConfiguration>('/configuration.json')
 }
@@ -36,7 +32,7 @@ function fetchConfig(): Promise<OidcConfiguration> {
 const { AUTH_TYPE } = environment
 const isOidcEnabled = AUTH_TYPE === AuthTypeEnum.Oidc
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: PropsWithChildren) {
   const alreadyLoad = useRef(false)
   const [configuration, setConfiguration] = useState<
     OidcConfiguration | undefined

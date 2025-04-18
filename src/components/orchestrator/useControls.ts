@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { type LunaticError } from '../../typeLunatic/type-source'
+import type { LunaticError } from '@inseefr/lunatic'
+
+import type { UseLunaticType } from './useLunaticContext'
 
 type UseControlsParams = {
   goNextPage: () => void
   goPreviousPage: () => void
-  pageTag: any
-  compileControls: () => {
-    isCritical: boolean
-    currentErrors: Record<string, LunaticError[]>
-  }
+  pageTag: UseLunaticType['pageTag']
+  compileControls: UseLunaticType['compileControls']
 }
 
 export function useControls({
@@ -34,27 +33,28 @@ export function useControls({
   }, [pageTag, currentErrors])
 
   const handleGoNext = useCallback(() => {
-    let errors
+    let errors: ReturnType<UseLunaticType['compileControls']>
     if (compileControls) {
       errors = compileControls()
-    }
-    setRefreshControls(false)
-    if (warning && !refreshControls) {
-      setWarning(false)
-      setCurrentErrors(undefined)
-      setCriticality(false)
-      goNextPage()
-    } else if (errors) {
-      setCriticality(errors.isCritical)
-      setCurrentErrors(errors.currentErrors)
-      if (errors.currentErrors && !errors.isCritical) {
-        setWarning(true)
-      } else if (!errors.currentErrors) {
+
+      setRefreshControls(false)
+      if (warning && !refreshControls) {
         setWarning(false)
+        setCurrentErrors(undefined)
+        setCriticality(false)
+        goNextPage()
+      } else if (errors) {
+        setCriticality(errors.isCritical)
+        setCurrentErrors(errors.currentErrors)
+        if (errors.currentErrors && !errors.isCritical) {
+          setWarning(true)
+        } else if (!errors.currentErrors) {
+          setWarning(false)
+          goNextPage()
+        }
+      } else {
         goNextPage()
       }
-    } else {
-      goNextPage()
     }
   }, [compileControls, warning, refreshControls, goNextPage])
 
