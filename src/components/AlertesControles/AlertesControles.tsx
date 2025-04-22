@@ -1,24 +1,12 @@
-import { type ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { fr } from '@codegouvfr/react-dsfr'
+import type { FilledLunaticComponentProps } from '@inseefr/lunatic/lib/src/use-lunatic/commons/fill-components/fill-components'
 
-import { type ComponentType } from '../../typeLunatic/type-source'
 import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { AlertesContent } from './AlertesContent'
 
-function ErrorMessage({ errorMessage }: { errorMessage: ReactNode }) {
-  if (errorMessage && Array.isArray(errorMessage)) {
-    return (
-      <>
-        {errorMessage.map((message, i) => {
-          return <p key={i}>{message}</p>
-        })}
-      </>
-    )
-  }
-  return <>{errorMessage}</>
-}
-
-function checkIfIsRoundAbout(components?: ComponentType[]) {
+function checkIfIsRoundAbout(components?: FilledLunaticComponentProps[]) {
   if (Array.isArray(components)) {
     return components.reduce(
       (status, { componentType }) => status || componentType === 'Roundabout',
@@ -45,16 +33,6 @@ export function AlertesControles() {
   }, [getComponents])
 
   if (currentErrors && isInRoundabout) {
-    const content = Object.values(currentErrors)
-      .flat()
-      .map(({ errorMessage, id }) => {
-        return (
-          <div key={id} className="message-error" id="alertText">
-            <ErrorMessage errorMessage={errorMessage} />
-          </div>
-        )
-      })
-
     return (
       <div
         aria-labelledby="alertHeading"
@@ -67,7 +45,7 @@ export function AlertesControles() {
         <h3 id="alertHeading" className={fr.cx('fr-alert__title')}>
           Il y a un problème
         </h3>
-        {content}
+        <AlertesContent currentErrors={currentErrors} />
       </div>
     )
   }

@@ -1,8 +1,7 @@
 import { createContext, useContext } from 'react'
 
-import { useLunatic } from '@inseefr/lunatic'
+import { type LunaticError, useLunatic } from '@inseefr/lunatic'
 
-import type { LunaticError } from '../../typeLunatic/type-source'
 import type {
   PersonalizationElement,
   SavingFailure,
