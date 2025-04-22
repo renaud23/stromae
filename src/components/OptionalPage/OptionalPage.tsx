@@ -35,9 +35,12 @@ function createContent(content?: Array<AcceptedElements>) {
   if (!content) {
     return []
   }
-  return content.reduce<any>((acc, element, index) => {
-    return [...acc, createPageElement(element, `element-${index}`)]
-  }, [])
+  return content.reduce<ReturnType<typeof createPageElement>[]>(
+    (acc, element, index) => {
+      return [...acc, createPageElement(element, `element-${index}`)]
+    },
+    [],
+  )
 }
 
 export function OptionalPage({ name }: { name?: string }) {
@@ -48,7 +51,7 @@ export function OptionalPage({ name }: { name?: string }) {
 
   useEffect(() => {
     if (name && metadata) {
-      if (name in metadata?.optionalPages) {
+      if (metadata.optionalPages && name in metadata.optionalPages) {
         setContent(metadata.optionalPages[name])
       } else {
         navigate(uri404())

@@ -28,8 +28,7 @@ export function AlertesControles() {
   }, [currentErrors])
 
   useEffect(() => {
-    const components = getComponents?.()
-    setIsRoundabout(checkIfIsRoundAbout(components))
+    setIsRoundabout(checkIfIsRoundAbout(getComponents?.()))
   }, [getComponents])
 
   if (currentErrors && isInRoundabout) {

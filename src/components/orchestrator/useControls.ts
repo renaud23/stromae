@@ -18,13 +18,13 @@ export function useControls({
   compileControls,
 }: UseControlsParams) {
   const [currentErrors, setCurrentErrors] =
-    useState<Record<string, LunaticError[]>>()
+    useState<ReturnType<UseLunaticType['compileControls']>>()
   const [warning, setWarning] = useState<boolean>(false)
   const [criticality, setCriticality] = useState<boolean>()
   const [refreshControls, setRefreshControls] = useState(false)
 
   useEffect(() => {
-    if (!(currentErrors?.roundabout && pageTag?.includes('#'))) {
+    if (!(currentErrors?.currentErrors?.roundabout && pageTag?.includes('#'))) {
       return
     }
     setWarning(false)
@@ -45,7 +45,7 @@ export function useControls({
         goNextPage()
       } else if (errors) {
         setCriticality(errors.isCritical)
-        setCurrentErrors(errors.currentErrors)
+        setCurrentErrors(errors)
         if (errors.currentErrors && !errors.isCritical) {
           setWarning(true)
         } else if (!errors.currentErrors) {

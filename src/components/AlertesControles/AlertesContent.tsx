@@ -1,18 +1,17 @@
-import type { LunaticError } from '@inseefr/lunatic'
-
+import type { UseLunaticType } from '../orchestrator/useLunaticContext'
 import { ErrorMessage } from './ErrorMessage'
 
 type Props = {
-  currentErrors: Record<string, LunaticError[]>
+  currentErrors: ReturnType<UseLunaticType['compileControls']>
 }
 
 export function AlertesContent({ currentErrors }: Props) {
-  if (Array.isArray(currentErrors)) {
-    return Object.values(currentErrors)
-      .flat()
-      .map(({ errorMessage, id }) => {
-        return <ErrorMessage key={id} errorMessage={errorMessage} />
-      })
+  const messages = Object.values(currentErrors?.currentErrors ?? {})
+
+  if (messages.length) {
+    return messages.flat().map(({ errorMessage, id }) => {
+      return <ErrorMessage key={id} errorMessage={errorMessage} />
+    })
   }
   return null
 }

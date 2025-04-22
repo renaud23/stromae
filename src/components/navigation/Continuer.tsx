@@ -8,9 +8,12 @@ import { uri404 } from '../../lib/domainUri'
 import { surveyApi } from '../../lib/surveys'
 import type { ComponentType } from '../../typeLunatic/type-source'
 import { CollectStatusEnum } from '../../typeStromae/type'
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import {
+  type UseLunaticType,
+  useLunaticContext,
+} from '../orchestrator/useLunaticContext'
 
-function getButtonTitle(getComponents: () => Array<ComponentType>) {
+function getButtonTitle(getComponents: UseLunaticType['getComponents']) {
   if (getComponents) {
     const components = getComponents()
     return components.reduce((acc, component) => {
@@ -24,8 +27,8 @@ function getButtonTitle(getComponents: () => Array<ComponentType>) {
 }
 
 function getStatus(
-  getComponents: () => Array<ComponentType>,
-  isLastPage: boolean,
+  getComponents: UseLunaticType['getComponents'],
+  isLastPage: UseLunaticType['isLastPage'],
   saving: boolean,
 ) {
   if (isLastPage) {

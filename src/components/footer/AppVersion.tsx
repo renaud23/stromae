@@ -1,12 +1,12 @@
 import { lunaticVersion, stromaeVersion } from '../../utils/app'
 
-export const AppVersion = ({
+export function AppVersion({
   className,
   appSupplementaire,
 }: {
   className: string
   appSupplementaire?: string
-}) => {
+}) {
   return (
     <span
       className={className}

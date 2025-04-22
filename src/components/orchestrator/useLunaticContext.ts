@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { type LunaticError, useLunatic } from '@inseefr/lunatic'
+import { useLunatic } from '@inseefr/lunatic'
 
 import type {
   PersonalizationElement,
@@ -13,19 +13,20 @@ export type UseLunaticType = ReturnType<typeof useLunatic>
 
 const nothingToDo = () => null
 
-type LunaticContext = {
-  goToPage: (args: { page: string }) => void
-  goNextPage: () => void
+export type LunaticContext = {
+  goToPage: UseLunaticType['goToPage']
+  goNextPage: UseLunaticType['goNextPage']
   compileControls: UseLunaticType['compileControls']
   goPreviousPage: UseLunaticType['goPreviousPage']
   getData: UseLunaticType['getData']
   pageTag: UseLunaticType['pageTag']
   getComponents: UseLunaticType['getComponents']
+  isFirstPage: UseLunaticType['isFirstPage']
+  isLastPage: UseLunaticType['isLastPage']
+
   /* */
-  isFirstPage: boolean
-  isLastPage: boolean
   waiting: boolean
-  currentErrors?: Record<string, LunaticError[]>
+  currentErrors?: ReturnType<UseLunaticType['compileControls']>
   disabled?: boolean
   initialData?: SurveyUnitData
   currentChange?: SurveyChange
