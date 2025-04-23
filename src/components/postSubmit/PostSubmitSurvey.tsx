@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { fr } from '@codegouvfr/react-dsfr'
-import Confirmation from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/success.svg'
+import Confirmation from '@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/success.svg?react'
 import { Skeleton } from '@mui/material'
 import { format } from 'date-fns'
 import { fr as localeFr } from 'date-fns/esm/locale'
@@ -105,26 +105,7 @@ export function PostSubmitSurvey() {
                 'fr-btns-group--center',
               )}
             >
-              <svg
-                className={fr.cx('fr-artwork')}
-                aria-hidden="true"
-                viewBox="0 0 80 80"
-                width="200"
-                height="200"
-              >
-                <use
-                  className={fr.cx('fr-artwork-decorative')}
-                  xlinkHref={`${Confirmation}#artwork-decorative`}
-                ></use>
-                <use
-                  className={fr.cx('fr-artwork-minor')}
-                  xlinkHref={`${Confirmation}#artwork-minor`}
-                ></use>
-                <use
-                  className={fr.cx('fr-artwork-major')}
-                  xlinkHref={`${Confirmation}#artwork-major`}
-                ></use>
-              </svg>
+              <Confirmation />
             </div>
           </div>
         </div>
