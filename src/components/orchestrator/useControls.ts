@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import type { LunaticError } from '@inseefr/lunatic'
-
 import type { UseLunaticType } from './useLunaticContext'
 
 type UseControlsParams = {

@@ -30,7 +30,7 @@ function Paragraph({
   )
 }
 
-function getContent(paragraphs: Object | string, id?: string) {
+function getContent(paragraphs: SectionElement['paragraphs'], id?: string) {
   if (typeof paragraphs === 'string') {
     return <Paragraph id={id} content={paragraphs} />
   }

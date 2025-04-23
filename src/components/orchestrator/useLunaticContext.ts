@@ -23,10 +23,10 @@ export type LunaticContext = {
   getComponents: UseLunaticType['getComponents']
   isFirstPage: UseLunaticType['isFirstPage']
   isLastPage: UseLunaticType['isLastPage']
+  currentErrors?: ReturnType<UseLunaticType['compileControls']>
 
   /* */
   waiting: boolean
-  currentErrors?: ReturnType<UseLunaticType['compileControls']>
   disabled?: boolean
   initialData?: SurveyUnitData
   currentChange?: SurveyChange

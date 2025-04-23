@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router'
 import { isComponentsContainSequence } from '../../lib/commons/isComponentscontainSequence'
 import { uri404 } from '../../lib/domainUri'
 import { surveyApi } from '../../lib/surveys'
-import type { ComponentType } from '../../typeLunatic/type-source'
 import { CollectStatusEnum } from '../../typeStromae/type'
 import {
   type UseLunaticType,

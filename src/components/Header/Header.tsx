@@ -8,9 +8,6 @@ import { HeaderMenuMobile } from './HeaderMenuMobile'
 import { type HeaderType } from './HeaderType'
 import { ParametresAffichage } from './ParametresAffichage'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const iconContact = fr.cx('fr-icon-questionnaire-line')
-
 function getAuthLabel(isAuthenticated: boolean): string {
   if (isAuthenticated) {
     return 'Me déconnecter'

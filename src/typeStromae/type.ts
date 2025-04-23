@@ -1,4 +1,7 @@
-import type { LunaticData } from '../typeLunatic/type'
+import type { LunaticData } from '@inseefr/lunatic'
+
+import type { HeaderType } from '../components/Header/HeaderType'
+import type { FooterType } from '../components/footer/FooterType'
 
 export enum CollectStatusEnum {
   Init = 'INIT',
@@ -78,7 +81,7 @@ export type OptionalPageElement = {
 export type SectionElement = OptionalPageElement & {
   type: OptionalPageElementsEnum.Section
   title: string
-  paragraphs: Object | string
+  paragraphs: Record<string, unknown> | string
 }
 
 export type TitleElement = OptionalPageElement & {

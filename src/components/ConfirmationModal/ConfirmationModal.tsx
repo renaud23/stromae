@@ -4,13 +4,15 @@ import type { ReactNode } from 'react'
 import { fr } from '@codegouvfr/react-dsfr'
 import { makeStyles } from '@codegouvfr/react-dsfr/tss'
 
-import type { GoToPage } from '../../typeLunatic/type-source'
 import {
   ModalDsfr,
   ModalDsfrContent,
   ModalDsfrFooter,
 } from '../ContinueOrRestartModal/ModalDsfr'
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import {
+  type UseLunaticType,
+  useLunaticContext,
+} from '../orchestrator/useLunaticContext'
 
 const useStyles = makeStyles()({
   root: {
@@ -21,7 +23,7 @@ const useStyles = makeStyles()({
 })
 
 type ConfirmationType = {
-  goToPage?: GoToPage
+  goToPage?: UseLunaticType['goToPage']
   description: ReactNode
   label: ReactNode
 }

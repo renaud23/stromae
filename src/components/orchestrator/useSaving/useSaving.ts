@@ -1,31 +1,27 @@
 import { useCallback, useRef, useState } from 'react'
 
-import type {
-  ValuesType,
-  ValuesTypeArray,
-} from '@inseefr/lunatic/lib/src/use-lunatic/type-source'
-
 import { surveyApi } from '../../../lib/surveys'
 import { CollectStatusEnum } from '../../../typeStromae/type'
 import type { SavingFailure } from '../../../typeStromae/type'
+import type { UseLunaticType } from '../useLunaticContext'
 
-type GetData = (withRefreshedCalculated: boolean) => {
-  CALCULATED: Record<string, unknown>
-  EXTERNAL: ({
-    variableType: 'EXTERNAL'
-    name: string
-    value: unknown
-  } & {
-    variableType: 'EXTERNAL'
-  })[]
-  COLLECTED: ({
-    variableType: 'COLLECTED'
-    name: string
-    values: ValuesType<unknown> | ValuesTypeArray<unknown>
-  } & {
-    variableType: 'COLLECTED'
-  })[]
-}
+// type GetData = (withRefreshedCalculated: boolean) => {
+//   CALCULATED: Record<string, unknown>
+//   EXTERNAL: ({
+//     variableType: 'EXTERNAL'
+//     name: string
+//     value: unknown
+//   } & {
+//     variableType: 'EXTERNAL'
+//   })[]
+//   COLLECTED: ({
+//     variableType: 'COLLECTED'
+//     name: string
+//     values: ValuesType<unknown> | ValuesTypeArray<unknown>
+//   } & {
+//     variableType: 'COLLECTED'
+//   })[]
+// }
 
 function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
   if (previous === CollectStatusEnum.Validated) {
@@ -59,7 +55,13 @@ export function useSaving({
   }, [])
 
   const saveChange = useCallback(
-    async ({ pageTag, getData }: { pageTag: string; getData: GetData }) => {
+    async ({
+      pageTag,
+      getData,
+    }: {
+      pageTag: UseLunaticType['pageTag']
+      getData: UseLunaticType['getData']
+    }) => {
       setFailure(undefined)
       setWaiting(true)
       try {
@@ -67,18 +69,22 @@ export function useSaving({
         const isOnChange = changes.current.size !== 0
         if (isOnChange) {
           const lunaticValues = getData(false)?.COLLECTED ?? {}
-          const keys = Array.from(changes.current.keys())
+
           const payload = Object.entries(
             Object.fromEntries(changes.current),
           ).reduce((acc, [name]) => {
-            return {
-              ...acc,
-              [name]: lunaticValues[name]?.COLLECTED ?? null,
+            if (name in lunaticValues) {
+              return {
+                ...acc,
+                [name]: lunaticValues[name]?.COLLECTED ?? null,
+              }
             }
+            return acc
           }, {})
           await surveyApi.putSurveyUnitData(payload, unit)
           setFailure({ status: 200 })
 
+          const keys = Array.from(changes.current.keys())
           for (const variable of keys) {
             changes.current.delete(variable)
           }
