@@ -6,7 +6,7 @@ import type { LunaticComponentType } from '@inseefr/lunatic/lib/src/components/t
 import type { FilledLunaticComponentProps } from '@inseefr/lunatic/lib/src/use-lunatic/commons/fill-components/fill-components'
 
 import { LunaticComponentContainer } from '../formulaire/LunaticComponentContainer'
-import type { LunaticContext } from '../orchestrator/useLunaticContext'
+import type { LunaticContext } from '../orchestrator/hook/useLunaticContext'
 
 type ComponentsRendererProps = {
   only?: LunaticComponentType[]

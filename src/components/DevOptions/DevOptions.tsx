@@ -1,7 +1,7 @@
 import { Button } from '@codegouvfr/react-dsfr/Button'
 
 import { environment } from '../../utils/read-env-vars'
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
 
 const { DEBUG } = environment
 

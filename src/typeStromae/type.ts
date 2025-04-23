@@ -131,6 +131,8 @@ export type WelcomeType = {
   Enq_Faq_QuestionsAdditionnelles?: [{ question: string; contenu: string }]
 }
 
+export type SurveyChange = { name: string; value?: unknown }
+
 export type MetadataSurvey = {
   Header: HeaderType
   Footer: FooterType

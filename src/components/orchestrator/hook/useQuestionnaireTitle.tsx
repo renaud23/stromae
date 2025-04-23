@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 
 import type { LunaticSource } from '@inseefr/lunatic'
 
-import { objectHasKey } from '../../lib/commons/object'
-import { useDocumentTitle } from '../../utils/useDocumentTitle'
+import { objectHasKey } from '../../../lib/commons/object'
+import { useDocumentTitle } from '../../../utils/useDocumentTitle'
 
 function getTitleByPage(
   source?: LunaticSource,

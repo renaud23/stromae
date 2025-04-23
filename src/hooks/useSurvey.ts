@@ -1,16 +1,17 @@
-import { useCallback } from 'react';
-import { surveyApi } from '../lib/surveys/surveysApi';
-import { useRemote } from '../components/orchestrator/useRemote';
+import { useCallback } from 'react'
+
+import { useRemote } from '../components/orchestrator/hook/useRemote'
+import { surveyApi } from '../lib/surveys/surveysApi'
 
 export function useSurvey(survey?: string, onError = () => {}) {
-	const getSurvey = useCallback(async () => {
-		if (survey) {
-			return surveyApi.getSurvey(survey);
-		}
-		return undefined;
-	}, [survey]);
+  const getSurvey = useCallback(async () => {
+    if (survey) {
+      return surveyApi.getSurvey(survey)
+    }
+    return undefined
+  }, [survey])
 
-	const lunaticSource = useRemote(getSurvey, onError);
+  const lunaticSource = useRemote(getSurvey, onError)
 
-	return lunaticSource;
+  return lunaticSource
 }

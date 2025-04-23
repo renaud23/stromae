@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 
 import { surveyApi } from '../../lib/surveys'
 import { type PersonalizationElement } from '../../typeStromae/type'
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
 
 function parseLabel(value: string | number | boolean | string[]) {
   if (Array.isArray(value)) {

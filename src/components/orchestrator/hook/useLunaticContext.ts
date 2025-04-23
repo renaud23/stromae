@@ -5,9 +5,9 @@ import { useLunatic } from '@inseefr/lunatic'
 import type {
   PersonalizationElement,
   SavingFailure,
+  SurveyChange,
   SurveyUnitData,
-} from '../../typeStromae/type'
-import type { SurveyChange } from './Orchestrator'
+} from '../../../typeStromae/type'
 
 export type UseLunaticType = ReturnType<typeof useLunatic>
 

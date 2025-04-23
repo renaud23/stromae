@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { fr } from '@codegouvfr/react-dsfr'
 
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
 import { ModalDsfr, ModalDsfrContent, ModalDsfrFooter } from './ModalDsfr'
 
 export function ContinueOrRestartModal() {

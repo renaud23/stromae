@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
 
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
 import { useStyles } from './useStyles'
 
 const duration = 1_500

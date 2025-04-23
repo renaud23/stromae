@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from 'react-router'
 
-import { useMetadata } from '../../hooks/useMetadata'
-import { useSurvey } from '../../hooks/useSurvey'
-import { useSurveyUnitData } from '../../hooks/useSurveyUnitData'
-import { uri404, uri423 } from '../../lib/domainUri'
-import { removeDeclarationsAfterFromSource } from '../../utils/questionnaire'
+import { useMetadata } from '../../../hooks/useMetadata'
+import { useSurvey } from '../../../hooks/useSurvey'
+import { useSurveyUnitData } from '../../../hooks/useSurveyUnitData'
+import { uri404, uri423 } from '../../../lib/domainUri'
+import { removeDeclarationsAfterFromSource } from '../../../utils/questionnaire'
 
 export type ResponseData = {
   status: number

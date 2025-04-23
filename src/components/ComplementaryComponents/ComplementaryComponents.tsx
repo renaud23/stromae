@@ -2,7 +2,7 @@ import { makeStyles } from '@codegouvfr/react-dsfr/tss'
 import type { LunaticComponentType } from '@inseefr/lunatic/lib/src/components/type'
 
 import { ComponentsRenderer } from '../ComponentsRenderer'
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
 
 const useStyles = makeStyles()({
   root: {

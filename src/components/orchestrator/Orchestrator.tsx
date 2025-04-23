@@ -5,10 +5,10 @@ import { useParams } from 'react-router'
 
 import { surveyApi } from '../../lib/surveys'
 import type { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type'
-import { useControls } from './useControls'
-import { type UseLunaticType, lunaticContext } from './useLunaticContext'
-import { useOrchestrator } from './useOrchestrator'
-import { useRemoteSurveyJson } from './useRemoteSurveyJson'
+import { useControls } from './hook/useControls'
+import { type UseLunaticType, lunaticContext } from './hook/useLunaticContext'
+import { useOrchestrator } from './hook/useOrchestrator'
+import { useRemoteSurveyJson } from './hook/useRemoteSurveyJson'
 
 export type OrchestratorProps = {
   source: LunaticSource
@@ -26,8 +26,6 @@ export type OrchestratorProps = {
   metadata?: MetadataSurvey
   unit: string
 }
-
-export type SurveyChange = { name: string; value?: unknown }
 
 export function OrchestratorReady({
   children,

@@ -10,7 +10,7 @@ import { CollectStatusEnum } from '../../typeStromae/type'
 import {
   type UseLunaticType,
   useLunaticContext,
-} from '../orchestrator/useLunaticContext'
+} from '../orchestrator/hook/useLunaticContext'
 
 function getButtonTitle(getComponents: UseLunaticType['getComponents']) {
   if (getComponents) {

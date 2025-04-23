@@ -12,7 +12,7 @@ import {
 import {
   type UseLunaticType,
   useLunaticContext,
-} from '../orchestrator/useLunaticContext'
+} from '../orchestrator/hook/useLunaticContext'
 
 const useStyles = makeStyles()({
   root: {

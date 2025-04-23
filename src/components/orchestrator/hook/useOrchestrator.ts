@@ -3,17 +3,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { type LunaticSource, useLunatic } from '@inseefr/lunatic'
 import * as custom from '@inseefr/lunatic-dsfr'
 
-import { usePrevious } from '../../lib/commons/usePrevious'
-import { surveyApi } from '../../lib/surveys'
-import { CollectStatusEnum } from '../../typeStromae/type'
-import type {
-  MetadataSurvey,
-  PersonalizationElement,
-  SavingFailure,
-  SurveyUnitData,
-} from '../../typeStromae/type'
-import { ConfirmationModal as Modal } from '../ConfirmationModal/ConfirmationModal'
-import type { SurveyChange } from './Orchestrator'
+import { usePrevious } from '../../../lib/commons/usePrevious'
+import { surveyApi } from '../../../lib/surveys'
+import {
+  CollectStatusEnum,
+  type MetadataSurvey,
+  type PersonalizationElement,
+  type SavingFailure,
+  type SurveyChange,
+  type SurveyUnitData,
+} from '../../../typeStromae/type'
+import { ConfirmationModal as Modal } from '../../ConfirmationModal/ConfirmationModal'
 import { useQuestionnaireTitle } from './useQuestionnaireTitle'
 import { useRedirectIfAlreadyValidated } from './useRedirectIfAlreadyValidated'
 import { useSaving } from './useSaving'

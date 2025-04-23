@@ -3,25 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { surveyApi } from '../../../lib/surveys'
 import { CollectStatusEnum } from '../../../typeStromae/type'
 import type { SavingFailure } from '../../../typeStromae/type'
-import type { UseLunaticType } from '../useLunaticContext'
-
-// type GetData = (withRefreshedCalculated: boolean) => {
-//   CALCULATED: Record<string, unknown>
-//   EXTERNAL: ({
-//     variableType: 'EXTERNAL'
-//     name: string
-//     value: unknown
-//   } & {
-//     variableType: 'EXTERNAL'
-//   })[]
-//   COLLECTED: ({
-//     variableType: 'COLLECTED'
-//     name: string
-//     values: ValuesType<unknown> | ValuesTypeArray<unknown>
-//   } & {
-//     variableType: 'COLLECTED'
-//   })[]
-// }
+import type { UseLunaticType } from './useLunaticContext'
 
 function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
   if (previous === CollectStatusEnum.Validated) {

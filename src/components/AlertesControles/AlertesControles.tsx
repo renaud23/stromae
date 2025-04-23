@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { fr } from '@codegouvfr/react-dsfr'
 import type { FilledLunaticComponentProps } from '@inseefr/lunatic/lib/src/use-lunatic/commons/fill-components/fill-components'
 
-import { useLunaticContext } from '../orchestrator/useLunaticContext'
+import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
 import { AlertesContent } from './AlertesContent'
 
 function checkIfIsRoundAbout(components?: FilledLunaticComponentProps[]) {
