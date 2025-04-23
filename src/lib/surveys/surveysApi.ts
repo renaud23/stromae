@@ -1,4 +1,5 @@
-import { type LunaticSource } from '../../typeLunatic/type-source'
+import type { LunaticSource } from '@inseefr/lunatic'
+
 import type {
   DataVariables,
   MetadataSurvey,

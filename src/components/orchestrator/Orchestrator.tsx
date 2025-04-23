@@ -11,8 +11,8 @@ import { useOrchestrator } from './useOrchestrator'
 import { useRemoteSurveyJson } from './useRemoteSurveyJson'
 
 export type OrchestratorProps = {
-  // source: LunaticSource
-  // surveyUnitData: SurveyUnitData
+  source: LunaticSource
+  surveyUnitData: SurveyUnitData
 
   onChange?: UseLunaticType['onChange']
   getReferentiel?: (name: string) => Promise<Array<unknown>>
@@ -37,9 +37,7 @@ export function OrchestratorReady({
   surveyUnitData,
   disabled,
   unit,
-}: PropsWithChildren<
-  OrchestratorProps & { source: LunaticSource; surveyUnitData: SurveyUnitData }
->) {
+}: PropsWithChildren<OrchestratorProps>) {
   const initialData = surveyUnitData
 
   const {
@@ -111,11 +109,11 @@ export function Orchestrator({
   children,
   features,
   preferences,
-}: PropsWithChildren<OrchestratorProps>) {
+}: PropsWithChildren<Partial<OrchestratorProps>>) {
   const { unit } = useParams()
   const { source, surveyUnitData } = useRemoteSurveyJson()
 
-  if (source && unit) {
+  if (source && surveyUnitData && unit) {
     return (
       <OrchestratorReady
         source={source}

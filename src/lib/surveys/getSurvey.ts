@@ -1,6 +1,6 @@
+import type { LunaticSource } from '@inseefr/lunatic'
 import moize from 'moize'
 
-import { type LunaticSource } from '../../typeLunatic/type-source'
 import { authenticatedGetRequest } from '../commons/axios-utils'
 import { surveySource } from './api'
 

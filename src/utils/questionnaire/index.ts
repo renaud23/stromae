@@ -1,8 +1,7 @@
+import type { LunaticSource } from '@inseefr/lunatic'
+import type { DeclarationType } from '@inseefr/lunatic/lib/src/use-lunatic/type-source'
+
 import { type LunaticComponentDefinition } from '../../typeLunatic/type'
-import type {
-  DeclarationType,
-  LunaticSource,
-} from '../../typeLunatic/type-source'
 
 const removeDeclarationsAfterFromDeclarations = (
   declarations?: DeclarationType[],
