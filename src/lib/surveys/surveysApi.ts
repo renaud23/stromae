@@ -24,7 +24,7 @@ export interface SurveyApi {
   getFreshSurveyUnitData: (unit: string) => Promise<SurveyUnitData>
   getMetadataSurvey: (survey: string) => Promise<MetadataSurvey>
   getRequiredNomenclatures: (survey: string) => Promise<Array<string>>
-  getNomenclature: (name: string) => Promise<Array<any>>
+  getNomenclature: (name: string) => Promise<Array<unknown>>
   putSurveyUnitData: (data: DataVariables, unit: string) => Promise<void>
   putSurveyUnitStateData: (stateData: StateData, unit: string) => Promise<void>
   getDepositiProof: (unit: string) => Promise<BlobPart>

@@ -1,41 +1,46 @@
-import { Button } from '@codegouvfr/react-dsfr/Button';
-import { environment } from '../../utils/read-env-vars';
-import { useLunaticContext } from '../orchestrator/useLunaticContext';
+import { Button } from '@codegouvfr/react-dsfr/Button'
 
-const { DEBUG } = environment;
+import { environment } from '../../utils/read-env-vars'
+import { useLunaticContext } from '../orchestrator/useLunaticContext'
+
+const { DEBUG } = environment
 
 export function DevOptions() {
-	const { getData } = useLunaticContext();
-	function handleClick() {
-		const variables = getData?.(true);
-		console.log({ variables });
-	}
-	if (DEBUG) {
-		return (
-			<div
-				style={{
-					position: 'fixed',
-					bottom: '5px',
-					right: '5px',
-					textAlign: 'center',
-					fontSize: '8px',
-				}}
-			>
-				<div>Only available when NODE_ENV === 'development'</div>
-				<Button
-					priority="primary"
-					onClick={handleClick}
-					title="get-data-for-dev-purpose"
-					nativeButtonProps={{
-						form: 'stromae-form',
-						type: 'button',
-					}}
-					id="get-lunatic-data-button"
-				>
-					getData from Lunatic
-				</Button>
-			</div>
-		);
-	}
-	return null;
+  const { getData } = useLunaticContext()
+  function handleClick() {
+    try {
+      const variables = getData?.(false)
+      console.log({ variables })
+    } catch (e) {
+      console.warn(e)
+    }
+  }
+  if (DEBUG) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '5px',
+          right: '5px',
+          textAlign: 'center',
+          fontSize: '8px',
+        }}
+      >
+        <div>Only available when NODE_ENV === 'development'</div>
+        <Button
+          priority="primary"
+          onClick={handleClick}
+          title="get-data-for-dev-purpose"
+          nativeButtonProps={{
+            form: 'stromae-form',
+            type: 'button',
+          }}
+          id="get-lunatic-data-button"
+        >
+          getData from Lunatic
+        </Button>
+      </div>
+    )
+  }
+  return null
 }

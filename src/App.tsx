@@ -9,58 +9,65 @@ import { PostSubmit } from './pages/postSubmit'
 import { Questionnaire } from './pages/questionnaire'
 import { Welcome } from './pages/welcome'
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/questionnaire/:survey',
+      element: <Portail />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/questionnaire/:survey/unite-enquetee/:unit/post-envoi',
+      element: <PostSubmit />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/questionnaire/:survey/unite-enquetee/:unit/accueil',
+      element: <Welcome />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/questionnaire/:survey/unite-enquetee/:unit/deconnexion',
+      element: <Deconnexion />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/questionnaire/:survey/unite-enquetee/:unit',
+      element: <Questionnaire />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/questionnaire/:survey/423/:errorType',
+      element: <RouteError code={423} />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/questionnaire/:survey/:optional',
+      element: <Optional />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/404',
+      element: <RouteError />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/423',
+      element: <RouteError code={423} />,
+      errorElement: <RouteError />,
+    },
+    {
+      path: '/',
+      element: <RoutingPortail />,
+      errorElement: <RouteError />,
+    },
+  ],
   {
-    path: '/questionnaire/:survey',
-    element: <Portail />,
-    errorElement: <RouteError />,
+    future: {
+      v7_relativeSplatPath: true,
+    },
   },
-  {
-    path: '/questionnaire/:survey/unite-enquetee/:unit/post-envoi',
-    element: <PostSubmit />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/questionnaire/:survey/unite-enquetee/:unit/accueil',
-    element: <Welcome />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/questionnaire/:survey/unite-enquetee/:unit/deconnexion',
-    element: <Deconnexion />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/questionnaire/:survey/unite-enquetee/:unit',
-    element: <Questionnaire />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/questionnaire/:survey/423/:errorType',
-    element: <RouteError code={423} />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/questionnaire/:survey/:optional',
-    element: <Optional />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/404',
-    element: <RouteError />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/423',
-    element: <RouteError code={423} />,
-    errorElement: <RouteError />,
-  },
-  {
-    path: '/',
-    element: <RoutingPortail />,
-    errorElement: <RouteError />,
-  },
-])
+)
 
 export function App() {
   return (

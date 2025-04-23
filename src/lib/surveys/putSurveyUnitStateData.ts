@@ -9,6 +9,7 @@ export const putSurveyUnitStateData =
         surveyUnitStateDataUrl(domain, unit),
         state,
       )
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       throw new Error('Impossible de sauvegarder SuData')
     }
