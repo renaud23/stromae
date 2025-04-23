@@ -2,7 +2,7 @@ import { fr } from '@codegouvfr/react-dsfr'
 import { Accordion } from '@codegouvfr/react-dsfr/Accordion'
 import { Link } from 'react-router-dom'
 
-import type { WelcomeType } from './WelcomeType'
+import type { WelcomeType } from '../../typeStromae/type'
 
 export function WelcomeQuestions(props: { welcome: WelcomeType }) {
   let caracteristiqueEnquete
