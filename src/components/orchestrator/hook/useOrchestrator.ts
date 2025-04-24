@@ -14,6 +14,7 @@ import {
   type SurveyUnitData,
 } from '../../../typeStromae/type'
 import { ConfirmationModal as Modal } from '../../ConfirmationModal/ConfirmationModal'
+import type { UseLunaticType } from './useOrchestratorContext'
 import { useQuestionnaireTitle } from './useQuestionnaireTitle'
 import { useRedirectIfAlreadyValidated } from './useRedirectIfAlreadyValidated'
 import { useSaving } from './useSaving'
@@ -35,6 +36,7 @@ type useOrchestratorParams = {
   disabled?: boolean
   metadata?: MetadataSurvey
   unit: string
+  initialPage?: string
 }
 
 function createPersonalizationMap(
@@ -49,6 +51,24 @@ export type PersonalizationMap = Record<string, unknown> & {
   bannerLabelDependencies?: string | number | boolean | Array<string>
 }
 
+function useMeoizedFirstRef<T>(reference: T) {
+  const hook = useRef<T>(undefined)
+
+  useEffect(() => {
+    if (reference && hook.current === undefined) {
+      hook.current = reference
+    }
+  }, [reference])
+
+  return hook.current
+}
+
+/**
+ * Logique d'orchestration du questionnaire.
+ *
+ * @param params
+ * @returns
+ */
 export function useOrchestrator(params: useOrchestratorParams) {
   const {
     source,
@@ -61,6 +81,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
     // disabled,
     metadata,
     unit,
+    initialPage,
   } = params
 
   const [waiting, setWaiting] = useState(false)
@@ -113,6 +134,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
       workersBasePath: `${window.location.origin}/workers`,
       onChange,
       paginated,
+      initialPage,
     }),
     [
       getReferentiel,
@@ -122,6 +144,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
       autoSuggesterLoading,
       onChange,
       paginated,
+      initialPage,
     ],
   )
 
@@ -139,6 +162,8 @@ export function useOrchestrator(params: useOrchestratorParams) {
     pager,
   } = useLunatic(source, data, args)
 
+  const getData_ = useMeoizedFirstRef(getData)
+
   useEffect(() => {
     ;(
       document
@@ -154,13 +179,6 @@ export function useOrchestrator(params: useOrchestratorParams) {
     defaultTitle:
       typeof defaultTitle === 'string' ? defaultTitle : 'Enquête Insee',
   })
-
-  // Gestion de la sauvegarde : tout ce qui était dans le composant Save
-  const previousPageTag = usePrevious(pageTag)
-  const isNewPage =
-    pageTag !== undefined &&
-    previousPageTag !== undefined &&
-    previousPageTag !== pageTag
 
   const handleGoNext = useCallback(() => {
     setFailure(undefined)
@@ -178,6 +196,12 @@ export function useOrchestrator(params: useOrchestratorParams) {
     goPreviousPage?.()
   }, [goPreviousPage])
 
+  // Sauvegarde au changement revolu de page .
+  const previousPageTag = usePrevious(pageTag)
+  const isNewPage =
+    pageTag !== undefined &&
+    previousPageTag !== undefined &&
+    previousPageTag !== pageTag
   if (isNewPage && shouldSync.current) {
     shouldSync.current = false
     saveChange({ pageTag, getData })
@@ -189,7 +213,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
     goNextPage: handleGoNext,
     compileControls,
     goPreviousPage: handleGoBack,
-    getData,
+    getData_,
     pageTag,
     isLastPage,
     isFirstPage,
