@@ -2,11 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { fr } from '@codegouvfr/react-dsfr'
 
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 import { ModalDsfr, ModalDsfrContent, ModalDsfrFooter } from './ModalDsfr'
 
 export function ContinueOrRestartModal() {
-  const { goToPage, initialData } = useLunaticContext()
+  const { goToPage, initialData } = useOrchestratorContext()
   const last = useRef<HTMLButtonElement>(null)
   const pageFromAPI = initialData?.stateData.currentPage
   const [display, setDisplay] = useState(false)

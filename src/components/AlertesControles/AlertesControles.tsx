@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { fr } from '@codegouvfr/react-dsfr'
 import type { FilledLunaticComponentProps } from '@inseefr/lunatic/lib/src/use-lunatic/commons/fill-components/fill-components'
 
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 import { AlertesContent } from './AlertesContent'
 
 function checkIfIsRoundAbout(components?: FilledLunaticComponentProps[]) {
@@ -17,7 +17,7 @@ function checkIfIsRoundAbout(components?: FilledLunaticComponentProps[]) {
 }
 
 export function AlertesControles() {
-  const { currentErrors, criticality, getComponents } = useLunaticContext()
+  const { currentErrors, criticality, getComponents } = useOrchestratorContext()
   const type = criticality ? 'fr-alert--error' : 'fr-alert--warning'
   const [isInRoundabout, setIsRoundabout] = useState(false)
 

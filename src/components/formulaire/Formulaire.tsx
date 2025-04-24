@@ -1,7 +1,7 @@
 import type { LunaticComponentType } from '@inseefr/lunatic/lib/src/components/type'
 
 import { ComponentsRenderer } from '../ComponentsRenderer'
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 import { Form } from '../skeleton/Form'
 import { useStyles } from './useStyle'
 
@@ -17,7 +17,7 @@ export function Formulaire() {
     goNextPage,
     currentErrors,
     disabled,
-  } = useLunaticContext()
+  } = useOrchestratorContext()
 
   const { classes, cx } = useStyles()
   if (waiting && !isLastPage) {

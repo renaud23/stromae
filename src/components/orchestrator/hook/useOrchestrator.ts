@@ -20,9 +20,7 @@ import { useSaving } from './useSaving'
 
 const CUSTOM = { ...custom, Modal }
 
-//
-
-export type useOrchestratorParams = {
+type useOrchestratorParams = {
   source: LunaticSource
   surveyUnitData: SurveyUnitData
 
@@ -39,7 +37,7 @@ export type useOrchestratorParams = {
   unit: string
 }
 
-export function createPersonalizationMap(
+function createPersonalizationMap(
   personalization: Array<PersonalizationElement>,
 ) {
   return personalization.reduce((acc, { name, value }) => {

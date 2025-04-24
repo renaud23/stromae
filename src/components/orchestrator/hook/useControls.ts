@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import type { UseLunaticType } from './useLunaticContext'
+import type { UseLunaticType } from './useOrchestratorContext'
 
 type UseControlsParams = {
   goNextPage: () => void

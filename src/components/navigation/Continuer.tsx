@@ -9,8 +9,8 @@ import { surveyApi } from '../../lib/surveys'
 import { CollectStatusEnum } from '../../typeStromae/type'
 import {
   type UseLunaticType,
-  useLunaticContext,
-} from '../orchestrator/hook/useLunaticContext'
+  useOrchestratorContext,
+} from '../Orchestrator/hook/useOrchestratorContext'
 
 function getButtonTitle(getComponents: UseLunaticType['getComponents']) {
   if (getComponents) {
@@ -60,7 +60,7 @@ export function Continuer() {
     pageTag,
     getComponents,
     goNextPage,
-  } = useLunaticContext()
+  } = useOrchestratorContext()
 
   const navigate = useNavigate()
 

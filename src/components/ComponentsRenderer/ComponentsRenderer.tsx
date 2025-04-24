@@ -5,8 +5,8 @@ import * as lunatic from '@inseefr/lunatic'
 import type { LunaticComponentType } from '@inseefr/lunatic/lib/src/components/type'
 import type { FilledLunaticComponentProps } from '@inseefr/lunatic/lib/src/use-lunatic/commons/fill-components/fill-components'
 
+import type { OrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 import { LunaticComponentContainer } from '../formulaire/LunaticComponentContainer'
-import type { LunaticContext } from '../orchestrator/hook/useLunaticContext'
 
 type ComponentsRendererProps = {
   only?: LunaticComponentType[]
@@ -15,7 +15,7 @@ type ComponentsRendererProps = {
   focusKey?: string
 } & Partial<
   Pick<
-    LunaticContext,
+    OrchestratorContext,
     'getComponents' | 'currentErrors' | 'disabled' | 'goToPage' | 'goNextPage'
   >
 >

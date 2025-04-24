@@ -1,4 +1,4 @@
-import type { UseLunaticType } from '../orchestrator/hook/useLunaticContext'
+import type { UseLunaticType } from '../Orchestrator/hook/useOrchestratorContext'
 import { ErrorMessage } from './ErrorMessage'
 
 type Props = {

@@ -1,12 +1,12 @@
 import { Button } from '@codegouvfr/react-dsfr/Button'
 
 import { environment } from '../../utils/read-env-vars'
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 
 const { DEBUG } = environment
 
 export function DevOptions() {
-  const { getData } = useLunaticContext()
+  const { getData } = useOrchestratorContext()
   function handleClick() {
     try {
       const variables = getData?.(false)

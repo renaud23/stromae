@@ -13,7 +13,7 @@ export type UseLunaticType = ReturnType<typeof useLunatic>
 
 const nothingToDo = () => null
 
-export type LunaticContext = {
+export type OrchestratorContext = {
   /**  functions and objects provided by useLunatic and used by nested component in several pages */
   goToPage: UseLunaticType['goToPage']
   goNextPage: UseLunaticType['goNextPage']
@@ -37,7 +37,7 @@ export type LunaticContext = {
   criticality?: boolean
 }
 
-const LunaticContextInitial: LunaticContext = {
+const OrchestratorContextInitial: OrchestratorContext = {
   goToPage: nothingToDo,
   goNextPage: nothingToDo,
   goPreviousPage: () => {},
@@ -56,8 +56,8 @@ const LunaticContextInitial: LunaticContext = {
   currentChange: undefined,
 }
 
-export const lunaticContext = createContext(LunaticContextInitial)
+export const orchestratorContext = createContext(OrchestratorContextInitial)
 
-export function useLunaticContext(): LunaticContext {
-  return useContext(lunaticContext)
+export function useOrchestratorContext(): OrchestratorContext {
+  return useContext(orchestratorContext)
 }

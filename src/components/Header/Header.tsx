@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { fr } from '@codegouvfr/react-dsfr'
 
-import { useAuthentification } from '../orchestrator/hook/useAuthentification'
+import { useAuthentification } from '../Orchestrator/hook/useAuthentification'
 import { HeaderMenuDescktop } from './HeaderMenuDesktop'
 import { HeaderMenuMobile } from './HeaderMenuMobile'
 import { type HeaderType } from './HeaderType'

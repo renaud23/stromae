@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { surveyApi } from '../../../lib/surveys'
 import { CollectStatusEnum } from '../../../typeStromae/type'
 import type { SavingFailure } from '../../../typeStromae/type'
-import type { UseLunaticType } from './useLunaticContext'
+import type { UseLunaticType } from './useOrchestratorContext'
 
 function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
   if (previous === CollectStatusEnum.Validated) {

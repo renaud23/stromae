@@ -11,8 +11,8 @@ import {
 } from '../ContinueOrRestartModal/ModalDsfr'
 import {
   type UseLunaticType,
-  useLunaticContext,
-} from '../orchestrator/hook/useLunaticContext'
+  useOrchestratorContext,
+} from '../Orchestrator/hook/useOrchestratorContext'
 
 const useStyles = makeStyles()({
   root: {
@@ -32,7 +32,7 @@ export function ConfirmationModal(props: ConfirmationType) {
   const { classes, cx } = useStyles()
 
   const [display, setDisplay] = useState(true)
-  const { goToPage, goNextPage } = useLunaticContext()
+  const { goToPage, goNextPage } = useOrchestratorContext()
   const onClose = useCallback(() => {
     setDisplay(false)
     goToPage?.({ page: '17' })

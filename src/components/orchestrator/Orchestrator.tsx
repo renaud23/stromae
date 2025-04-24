@@ -6,8 +6,11 @@ import { surveyApi } from '../../lib/surveys'
 import type { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type'
 import { ContentSkeleton } from '../skeleton/Content'
 import { useControls } from './hook/useControls'
-import { type UseLunaticType, lunaticContext } from './hook/useLunaticContext'
 import { useOrchestrator } from './hook/useOrchestrator'
+import {
+  type UseLunaticType,
+  orchestratorContext,
+} from './hook/useOrchestratorContext'
 
 export type OrchestratorProps = {
   source: LunaticSource
@@ -70,7 +73,7 @@ export function OrchestratorReady({
 
   return (
     <Provider>
-      <lunaticContext.Provider
+      <orchestratorContext.Provider
         value={{
           goToPage,
           goNextPage: goNextPageWithControls,
@@ -92,7 +95,7 @@ export function OrchestratorReady({
         }}
       >
         {children}
-      </lunaticContext.Provider>
+      </orchestratorContext.Provider>
     </Provider>
   )
 }

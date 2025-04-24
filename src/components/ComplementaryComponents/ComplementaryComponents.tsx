@@ -2,7 +2,7 @@ import { makeStyles } from '@codegouvfr/react-dsfr/tss'
 import type { LunaticComponentType } from '@inseefr/lunatic/lib/src/components/type'
 
 import { ComponentsRenderer } from '../ComponentsRenderer'
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 
 const useStyles = makeStyles()({
   root: {
@@ -20,7 +20,11 @@ const only: LunaticComponentType[] = ['QuestionExplication']
  * For instance QuestionExplication to show more detail about a question
  */
 export function ComplementaryComponents() {
-  const { getComponents, currentErrors, disabled = false } = useLunaticContext()
+  const {
+    getComponents,
+    currentErrors,
+    disabled = false,
+  } = useOrchestratorContext()
   const { classes, cx } = useStyles()
 
   if (!getComponents) {

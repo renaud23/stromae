@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 
 import { surveyApi } from '../../lib/surveys'
 import { type PersonalizationElement } from '../../typeStromae/type'
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 
 function parseLabel(value: string | number | boolean | string[]) {
   if (Array.isArray(value)) {
@@ -36,7 +36,7 @@ function parsePersonalization(perzonalization: Array<PersonalizationElement>) {
 
 export function useBannerLabel() {
   const { unit } = useParams()
-  const { personalization, currentChange } = useLunaticContext()
+  const { personalization, currentChange } = useOrchestratorContext()
   const [bannerLabel, setBannerLabel] = useState('')
   const [bannerDependencies, setBannerDependencies] = useState<Array<string>>(
     [],

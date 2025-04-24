@@ -3,14 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { fr } from '@codegouvfr/react-dsfr'
 import { Tag } from '@codegouvfr/react-dsfr/Tag'
 
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 import { useStyles } from './useStyles'
 
 const duration = 1_500
 
 export function SavingBadge() {
   const { classes, cx } = useStyles()
-  const { savingFailure } = useLunaticContext()
+  const { savingFailure } = useOrchestratorContext()
   const [saved, setSaved] = useState(false)
 
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)

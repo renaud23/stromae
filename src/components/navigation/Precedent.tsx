@@ -4,11 +4,11 @@ import { fr } from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
 
 import { usePrevious } from '../../lib/commons/usePrevious'
-import { useLunaticContext } from '../orchestrator/hook/useLunaticContext'
+import { useOrchestratorContext } from '../Orchestrator/hook/useOrchestratorContext'
 
 export function Precedent() {
   const { goPreviousPage, isFirstPage, pageTag, getComponents } =
-    useLunaticContext()
+    useOrchestratorContext()
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const previousPage = usePrevious<string>(pageTag)
