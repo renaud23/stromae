@@ -14,15 +14,11 @@ import { AuthenticatingError } from '../Oidc/AuthenticatingError'
 import { CallbackSuccess } from '../Oidc/CallbackSuccess'
 import { ServiceWorkerNotSupported } from '../Oidc/ServiceWorkerNotSupported'
 import { SessionLost } from '../Oidc/SessionLost'
-import { Layout as LayoutSkeleton } from '../skeleton/Layout'
+import { LayoutSkeleton } from '../skeleton/Layout'
 
 enum TokenAutomaticRenewMode {
   AutomaticBeforeTokenExpiration = 'AutomaticBeforeTokensExpiration',
   AutomaticOnlyWhenFetchExecuted = 'AutomaticOnlyWhenFetchExecuted',
-}
-
-function Pending() {
-  return <LayoutSkeleton />
 }
 
 function fetchConfig(): Promise<OidcConfiguration> {
@@ -80,6 +76,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       </OidcProvider>
     )
   }
-  if (waitingForOidcConfiguration) return <Pending />
+  if (waitingForOidcConfiguration) return <LayoutSkeleton />
   return <>{children}</>
 }

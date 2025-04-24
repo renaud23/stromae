@@ -8,7 +8,7 @@ import { Header } from '../Header'
 import { type HeaderType } from '../Header/HeaderType'
 import { Footer } from '../footer/Footer'
 import { type FooterType } from '../footer/FooterType'
-import { Layout as LayoutSkeleton } from '../skeleton/Layout'
+import { LayoutSkeleton } from '../skeleton/Layout'
 import { Main } from './Main'
 
 const defaultLinks = [

@@ -1,3 +1,5 @@
+import { useParams } from 'react-router'
+
 import { AlertesSaving } from '../../components/AlertSaving/AlertesSaving'
 import { AlertesControles } from '../../components/AlertesControles'
 import { ComplementaryComponents } from '../../components/ComplementaryComponents/ComplementaryComponents'
@@ -10,6 +12,7 @@ import { Layout } from '../../components/layout'
 import { Continuer } from '../../components/navigation/Continuer'
 import { Precedent } from '../../components/navigation/Precedent'
 import { Orchestrator } from '../../components/orchestrator'
+import { useRemoteSurveyJson } from '../../components/orchestrator/hook/useRemoteSurveyJson'
 import { AuthSecure } from '../../lib/oidc'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
 
@@ -24,10 +27,19 @@ const COLLECTED = 'COLLECTED'
 export function Questionnaire() {
   useDocumentTitle('Questionnaire')
 
+  const { unit } = useParams()
+  const { source, surveyUnitData } = useRemoteSurveyJson()
+
   return (
     <AuthSecure>
       <Layout>
-        <Orchestrator features={FEATURES} savingType={COLLECTED}>
+        <Orchestrator
+          features={FEATURES}
+          savingType={COLLECTED}
+          unit={unit}
+          source={source}
+          surveyUnitData={surveyUnitData}
+        >
           <DraftBanner />
           <ContinueOrRestartModal />
           <Precedent />

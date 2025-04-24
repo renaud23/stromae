@@ -1,14 +1,13 @@
 import { type PropsWithChildren } from 'react'
 
 import type { LunaticSource } from '@inseefr/lunatic'
-import { useParams } from 'react-router'
 
 import { surveyApi } from '../../lib/surveys'
 import type { MetadataSurvey, SurveyUnitData } from '../../typeStromae/type'
+import { ContentSkeleton } from '../skeleton/Content'
 import { useControls } from './hook/useControls'
 import { type UseLunaticType, lunaticContext } from './hook/useLunaticContext'
 import { useOrchestrator } from './hook/useOrchestrator'
-import { useRemoteSurveyJson } from './hook/useRemoteSurveyJson'
 
 export type OrchestratorProps = {
   source: LunaticSource
@@ -107,10 +106,10 @@ export function Orchestrator({
   children,
   features,
   preferences,
+  source,
+  surveyUnitData,
+  unit,
 }: PropsWithChildren<Partial<OrchestratorProps>>) {
-  const { unit } = useParams()
-  const { source, surveyUnitData } = useRemoteSurveyJson()
-
   if (source && surveyUnitData && unit) {
     return (
       <OrchestratorReady
@@ -125,5 +124,6 @@ export function Orchestrator({
       </OrchestratorReady>
     )
   }
-  return null
+
+  return <ContentSkeleton />
 }

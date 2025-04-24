@@ -14,6 +14,7 @@ export type UseLunaticType = ReturnType<typeof useLunatic>
 const nothingToDo = () => null
 
 export type LunaticContext = {
+  /**  functions and objects provided by useLunatic and used by nested component in several pages */
   goToPage: UseLunaticType['goToPage']
   goNextPage: UseLunaticType['goNextPage']
   compileControls: UseLunaticType['compileControls']
@@ -23,9 +24,9 @@ export type LunaticContext = {
   getComponents: UseLunaticType['getComponents']
   isFirstPage: UseLunaticType['isFirstPage']
   isLastPage: UseLunaticType['isLastPage']
-  currentErrors?: ReturnType<UseLunaticType['compileControls']>
 
-  /* */
+  /** states used for orchestrating the survey  */
+  currentErrors?: ReturnType<UseLunaticType['compileControls']>
   waiting: boolean
   disabled?: boolean
   initialData?: SurveyUnitData
@@ -42,6 +43,7 @@ const LunaticContextInitial: LunaticContext = {
   goPreviousPage: () => {},
   compileControls: () => ({ currentErrors: {}, isCritical: false }),
   getComponents: () => [],
+  getData: () => ({ CALCULATED: {}, EXTERNAL: [], COLLECTED: [] }),
   pageTag: '1',
   initialData: undefined,
   savingFailure: undefined,
@@ -52,7 +54,6 @@ const LunaticContextInitial: LunaticContext = {
   waiting: false,
   disabled: false,
   currentChange: undefined,
-  getData: () => ({ CALCULATED: {}, EXTERNAL: [], COLLECTED: [] }),
 }
 
 export const lunaticContext = createContext(LunaticContextInitial)
