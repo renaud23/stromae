@@ -14,7 +14,6 @@ import {
   type SurveyUnitData,
 } from '../../../typeStromae/type'
 import { ConfirmationModal as Modal } from '../../ConfirmationModal/ConfirmationModal'
-import type { UseLunaticType } from './useOrchestratorContext'
 import { useQuestionnaireTitle } from './useQuestionnaireTitle'
 import { useRedirectIfAlreadyValidated } from './useRedirectIfAlreadyValidated'
 import { useSaving } from './useSaving'
@@ -63,6 +62,14 @@ function useMeoizedFirstRef<T>(reference: T) {
   return hook.current
 }
 
+function focusFirstLegend() {
+  ;(
+    document
+      .getElementById('stromae-form')
+      ?.getElementsByTagName('legend')[0] as HTMLElement
+  )?.focus()
+}
+
 /**
  * Logique d'orchestration du questionnaire.
  *
@@ -78,14 +85,13 @@ export function useOrchestrator(params: useOrchestratorParams) {
     savingType,
     autoSuggesterLoading,
     paginated,
-    // disabled,
     metadata,
     unit,
     initialPage,
   } = params
 
   const [waiting, setWaiting] = useState(false)
-  // const [onSaving, setOnSaving] = useOptimistic(false);
+
   const [failure, setFailure] = useState<SavingFailure>()
   const { data, stateData, personalization = [] } = surveyUnitData ?? {}
   const [currentChange, setCurrentChange] = useState<SurveyChange>()
@@ -164,14 +170,6 @@ export function useOrchestrator(params: useOrchestratorParams) {
 
   const getData_ = useMeoizedFirstRef(getData)
 
-  useEffect(() => {
-    ;(
-      document
-        .getElementById('stromae-form')
-        ?.getElementsByTagName('legend')[0] as HTMLElement
-    )?.focus()
-  }, [pager])
-
   const defaultTitle = metadata?.Header?.serviceTitle
   useQuestionnaireTitle({
     source,
@@ -205,6 +203,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
   if (isNewPage && shouldSync.current) {
     shouldSync.current = false
     saveChange({ pageTag, getData })
+    focusFirstLegend()
   }
 
   return {
@@ -213,7 +212,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
     goNextPage: handleGoNext,
     compileControls,
     goPreviousPage: handleGoBack,
-    getData_,
+    getData: getData_,
     pageTag,
     isLastPage,
     isFirstPage,
