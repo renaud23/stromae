@@ -46,10 +46,6 @@ function createPersonalizationMap(
   }, {})
 }
 
-export type PersonalizationMap = Record<string, unknown> & {
-  bannerLabelDependencies?: string | number | boolean | Array<string>
-}
-
 function useMeoizedFirstRef<T>(reference: T) {
   const hook = useRef<T>(undefined)
 
