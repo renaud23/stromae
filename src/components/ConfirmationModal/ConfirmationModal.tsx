@@ -26,17 +26,24 @@ type ConfirmationType = {
   goToPage?: UseLunaticType['goToPage']
   description: ReactNode
   label: ReactNode
+  backPage?: string
 }
 
 export function ConfirmationModal(props: ConfirmationType) {
   const { classes, cx } = useStyles()
-
+  const { backPage } = props
   const [display, setDisplay] = useState(true)
-  const { goToPage, goNextPage } = useOrchestratorContext()
+  const { goToPage, goNextPage, goPreviousPage } = useOrchestratorContext()
+
+  const onClose_ = useCallback(() => {
+    setDisplay(false)
+    goPreviousPage?.()
+  }, [goPreviousPage])
+
   const onClose = useCallback(() => {
     setDisplay(false)
-    goToPage?.({ page: '17' })
-  }, [goToPage])
+    goToPage?.({ page: backPage ?? '18' })
+  }, [backPage, goToPage])
 
   const confirm = useCallback(() => {
     goNextPage?.()
@@ -47,7 +54,7 @@ export function ConfirmationModal(props: ConfirmationType) {
   }
   return (
     <div id="stromae-modals" className={cx(classes.root)}>
-      <ModalDsfr close={onClose}>
+      <ModalDsfr close={onClose_}>
         <ModalDsfrContent>
           <h1 className="fr-modal__title">{props.label}</h1>
           {props.description}
@@ -65,7 +72,7 @@ export function ConfirmationModal(props: ConfirmationType) {
                 className={fr.cx('fr-btn', 'fr-btn--secondary')}
                 onClick={onClose}
               >
-                Annuler
+                Je souhaite corriger
               </button>
             </li>
             <li>
