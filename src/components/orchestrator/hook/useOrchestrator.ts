@@ -14,6 +14,7 @@ import {
   type SurveyUnitData,
 } from '../../../typeStromae/type'
 import { ConfirmationModal as Modal } from '../../ConfirmationModal/ConfirmationModal'
+import type { UseLunaticType } from './useOrchestratorContext'
 import { useQuestionnaireTitle } from './useQuestionnaireTitle'
 import { useRedirectIfAlreadyValidated } from './useRedirectIfAlreadyValidated'
 import { useSaving } from './useSaving'
@@ -47,7 +48,7 @@ function createPersonalizationMap(
 }
 
 function useMeoizedFirstRef<T>(reference: T) {
-  const hook = useRef<T>(undefined)
+  const hook = useRef<T>(reference)
 
   useEffect(() => {
     if (reference && hook.current === undefined) {
@@ -164,7 +165,7 @@ export function useOrchestrator(params: useOrchestratorParams) {
     pager,
   } = useLunatic(source, data, args)
 
-  const getData_ = useMeoizedFirstRef(getData)
+  const getData_ = useMeoizedFirstRef<UseLunaticType['getData']>(getData)
 
   const defaultTitle = metadata?.Header?.serviceTitle
   useQuestionnaireTitle({
