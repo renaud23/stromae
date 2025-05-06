@@ -15,8 +15,8 @@ function getTitleByPage(
   }
   let title = defaultTitle
   return source.components.reduce((acc, component) => {
-    if (component.componentType === 'Sequence') {
-      title = component.title ?? defaultTitle
+    if (component.componentType === 'Sequence' && 'title' in component) {
+      title = (component.title as string) ?? defaultTitle
     }
     return { ...acc, [component.page]: title }
   }, base)

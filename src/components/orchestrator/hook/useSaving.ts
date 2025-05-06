@@ -5,6 +5,8 @@ import { CollectStatusEnum } from '../../../typeStromae/type'
 import type { SavingFailure } from '../../../typeStromae/type'
 import type { UseLunaticType } from './useOrchestratorContext'
 
+type CollectedType = Pick<ReturnType<UseLunaticType['getData']>, 'COLLECTED'>
+
 function getCollectStatus(changing: boolean, previous: CollectStatusEnum) {
   if (previous === CollectStatusEnum.Validated) {
     return CollectStatusEnum.Validated
@@ -58,7 +60,12 @@ export function useSaving({
             if (name in lunaticValues) {
               return {
                 ...acc,
-                [name]: lunaticValues[name]?.COLLECTED ?? null,
+                [name]:
+                  (
+                    lunaticValues[
+                      name as keyof object
+                    ] as unknown as CollectedType
+                  )?.COLLECTED ?? null,
               }
             }
             return acc

@@ -23,6 +23,7 @@ export function Formulaire() {
   if (waiting && !isLastPage) {
     return <Form />
   }
+
   return (
     <form id="stromae-form" className={cx(classes.root)}>
       <ComponentsRenderer

@@ -17,7 +17,9 @@ function getButtonTitle(getComponents: UseLunaticType['getComponents']) {
     const components = getComponents()
     return components.reduce((acc, component) => {
       if (component.componentType === 'Sequence') {
-        return `Commencer la saise des questions concernant l'étape ${component.title}`
+        if ('title' in component) {
+          return `Commencer la saise des questions concernant l'étape ${component.title}`
+        }
       }
       return acc
     }, `Passer à l'étape suivante`)
