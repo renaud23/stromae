@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
-import * as lunaticComponents from '@inseefr/lunatic'
+import { LunaticComponents } from '@inseefr/lunatic'
 import * as lunatic from '@inseefr/lunatic'
 import type { LunaticComponentType } from '@inseefr/lunatic/lib/src/components/type'
 import type { FilledLunaticComponentProps } from '@inseefr/lunatic/lib/src/use-lunatic/commons/fill-components/fill-components'
@@ -37,12 +37,12 @@ export function ComponentsRenderer(props: ComponentsRendererProps) {
     ) ?? []
 
   return (
-    <lunaticComponents.LunaticComponents
+    <LunaticComponents
       autoFocusKey={computeFocusKey(focusKey, currentErrors)}
       components={validComponents}
       componentProps={() => ({
         ...rest,
-        errors: currentErrors,
+        errors: currentErrors?.currentErrors,
         disabled,
       })}
       wrapper={({
